@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import Column from './Column'
-import { Container, IconButton, useDisclosure } from '@chakra-ui/react'
+import { Flex, IconButton, useDisclosure } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 import { DragDropContext } from 'react-beautiful-dnd'
 import NewColumnModal from './NewColumnModal'
-import { v4 as uuidv4 } from 'uuid';
+import AddTask from './AddTask'
+import { v4 as uuidv4 } from 'uuid'
 
 const DUMMY_DATA = {
 	tasks: {
@@ -36,7 +37,6 @@ const Board = () => {
 	const [data, setData] = useState(DUMMY_DATA)
 	const { isOpen, onOpen, onClose } = useDisclosure()
 
-
 	const handleOnDragEnd = result => {
 		if (!result.destination) return
 		const sourceCol = result.source.droppableId
@@ -57,7 +57,7 @@ const Board = () => {
 		})
 	}
 
-	const handleNewColumn = (newColumnTitle) => {
+	const handleNewColumn = newColumnTitle => {
 		const newColumn = {
 			id: uuidv4(),
 			title: newColumnTitle,
@@ -65,8 +65,22 @@ const Board = () => {
 		}
 		setData(prevState => ({
 			...prevState,
-			...prevState.columns[newColumn.id] = newColumn, 
+			...(prevState.columns[newColumn.id] = newColumn),
 			...prevState.columnOrder.push(newColumn.id)
+		}))
+	}
+
+	const handleNewTask = taskTitle => {
+		const newTask = {
+			id: uuidv4(),
+			content: taskTitle
+		}
+		setData(prevState => ({
+			...prevState,
+			...(prevState.tasks[newTask.id] = newTask),
+			...prevState.columns[
+				Object.keys(prevState.columns)[0]
+			].taskIds.push(newTask.id)
 		}))
 	}
 
@@ -86,16 +100,24 @@ const Board = () => {
 
 	return (
 		<DragDropContext onDragEnd={handleOnDragEnd}>
-			<NewColumnModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} onAdd={handleNewColumn}/>
-			<Container display='flex' m={5}>
-				{columns}
-				<IconButton
-					isRound={true}
-					aria-label="Add column"
-					icon={<AddIcon />}
-					onClick={onOpen}
-				/>
-			</Container>
+			<NewColumnModal
+				isOpen={isOpen}
+				onOpen={onOpen}
+				onClose={onClose}
+				onAdd={handleNewColumn}
+			/>
+			<Flex direction="column" m={5}>
+				<AddTask onSubmit={handleNewTask} />
+				<Flex mt={5}>
+					{columns}
+					<IconButton
+						isRound={true}
+						aria-label="Add column"
+						icon={<AddIcon />}
+						onClick={onOpen}
+					/>
+				</Flex>
+			</Flex>
 		</DragDropContext>
 	)
 }
