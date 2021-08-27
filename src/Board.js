@@ -102,6 +102,13 @@ const Board = () => {
 		}))
 	}
 
+	const handleColumnTitleChange = colData => {
+		setData(prevState => ({
+			...prevState,
+			...(prevState.columns[colData.id].title = colData.title)
+		}))
+	}
+
 	const board = (
 		<Droppable droppableId="board" type="column" direction="horizontal">
 			{provided => (
@@ -121,6 +128,7 @@ const Board = () => {
 									taskId => data.tasks[taskId]
 								)}
 								onDrop={handleOnDragEnd}
+								onTitleSubmit={handleColumnTitleChange}
 							/>
 						))}
 					</Box>
