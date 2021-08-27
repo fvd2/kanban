@@ -3,13 +3,16 @@ import Column from './Column'
 import {
 	Container as Box,
 	Flex,
+	useDisclosure,
 	IconButton,
-	useDisclosure
+	Icon
 } from '@chakra-ui/react'
+import { BsKanban, BsTable } from 'react-icons/bs'
 import { AddIcon } from '@chakra-ui/icons'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import NewColumnModal from './NewColumnModal'
 import AddTask from './AddTask'
+import TableView from './TableView'
 import { v4 as uuidv4 } from 'uuid'
 
 const DUMMY_DATA = {
@@ -41,6 +44,7 @@ const DUMMY_DATA = {
 const Board = () => {
 	const [data, setData] = useState(DUMMY_DATA)
 	const { isOpen, onOpen, onClose } = useDisclosure()
+	const [view, setView] = useState('board')
 
 	const handleOnDragEnd = result => {
 		if (result.type === 'column') {
@@ -109,6 +113,10 @@ const Board = () => {
 		}))
 	}
 
+	const handleViewToggle = () => {
+		setView(prevState => (prevState === 'board' ? 'table' : 'board'))
+	}
+
 	const board = (
 		<Droppable droppableId="board" type="column" direction="horizontal">
 			{provided => (
@@ -131,6 +139,12 @@ const Board = () => {
 								onTitleSubmit={handleColumnTitleChange}
 							/>
 						))}
+						<IconButton
+							isRound={true}
+							aria-label="Add column"
+							icon={<AddIcon />}
+							onClick={onOpen}
+						/>
 					</Box>
 					{provided.placeholder}
 				</>
@@ -147,16 +161,20 @@ const Board = () => {
 				onAdd={handleNewColumn}
 			/>
 			<Flex direction="column" m={5}>
-				<AddTask onSubmit={handleNewTask} />
-				<Flex mt={5}>
-					{board}
+				<Flex mb={5}>
 					<IconButton
-						isRound={true}
-						aria-label="Add column"
-						icon={<AddIcon />}
-						onClick={onOpen}
+						isDisabled={view === 'board'}
+						onClick={handleViewToggle}
+						icon={<Icon as={BsKanban} />}
+					/>
+					<IconButton
+						isDisabled={view === 'table'}
+						onClick={handleViewToggle}
+						icon={<Icon as={BsTable} />}
 					/>
 				</Flex>
+				<AddTask onSubmit={handleNewTask} />
+				<Flex mt={5}>{view === 'board' ? board : <TableView data={data}/>}</Flex>
 			</Flex>
 		</DragDropContext>
 	)
