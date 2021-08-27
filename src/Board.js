@@ -1,8 +1,13 @@
 import { useState } from 'react'
 import Column from './Column'
-import { Flex, IconButton, useDisclosure } from '@chakra-ui/react'
+import {
+	Container as Box,
+	Flex,
+	IconButton,
+	useDisclosure
+} from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
-import { DragDropContext } from 'react-beautiful-dnd'
+import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import NewColumnModal from './NewColumnModal'
 import AddTask from './AddTask'
 import { v4 as uuidv4 } from 'uuid'
@@ -38,23 +43,36 @@ const Board = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure()
 
 	const handleOnDragEnd = result => {
-		if (!result.destination) return
-		const sourceCol = result.source.droppableId
-		const destCol = result.destination.droppableId
-		setData(prevState => {
-			return {
+		if (result.type === 'column') {
+			setData(prevState => ({
 				...prevState,
-				...prevState.columns[sourceCol].taskIds.splice(
-					result.source.index,
-					1
-				),
-				...prevState.columns[destCol].taskIds.splice(
+				...prevState.columnOrder.splice(result.source.index, 1),
+				...prevState.columnOrder.splice(
 					result.destination.index,
 					0,
 					result.draggableId
 				)
-			}
-		})
+			}))
+		}
+		if (result.type === 'task') {
+			if (!result.destination) return
+			const sourceCol = result.source.droppableId
+			const destCol = result.destination.droppableId
+			setData(prevState => {
+				return {
+					...prevState,
+					...prevState.columns[sourceCol].taskIds.splice(
+						result.source.index,
+						1
+					),
+					...prevState.columns[destCol].taskIds.splice(
+						result.destination.index,
+						0,
+						result.draggableId
+					)
+				}
+			})
+		}
 	}
 
 	const handleNewColumn = newColumnTitle => {
@@ -84,19 +102,33 @@ const Board = () => {
 		}))
 	}
 
-	const columns = DUMMY_DATA.columnOrder.map((columnId, index) => (
-		<Column
-			key={columnId}
-			id={columnId}
-			index={index}
-			title={data.columns[columnId].title}
-			taskIds={data.columns[columnId].taskIds}
-			tasks={data.columns[columnId].taskIds.map(
-				taskId => data.tasks[taskId]
+	const board = (
+		<Droppable droppableId="board" type="column" direction="horizontal">
+			{provided => (
+				<>
+					<Box
+						display="flex"
+						ref={provided.innerRef}
+						{...provided.droppableProps}>
+						{DUMMY_DATA.columnOrder.map((columnId, index) => (
+							<Column
+								key={columnId}
+								id={columnId}
+								index={index}
+								title={data.columns[columnId].title}
+								taskIds={data.columns[columnId].taskIds}
+								tasks={data.columns[columnId].taskIds.map(
+									taskId => data.tasks[taskId]
+								)}
+								onDrop={handleOnDragEnd}
+							/>
+						))}
+					</Box>
+					{provided.placeholder}
+				</>
 			)}
-			onDrop={handleOnDragEnd}
-		/>
-	))
+		</Droppable>
+	)
 
 	return (
 		<DragDropContext onDragEnd={handleOnDragEnd}>
@@ -109,7 +141,7 @@ const Board = () => {
 			<Flex direction="column" m={5}>
 				<AddTask onSubmit={handleNewTask} />
 				<Flex mt={5}>
-					{columns}
+					{board}
 					<IconButton
 						isRound={true}
 						aria-label="Add column"
