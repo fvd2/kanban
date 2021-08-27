@@ -10,8 +10,8 @@ const Column = ({ id, title, tasks, index }) => {
 				{provided => (
 					<div ref={provided.innerRef}>
 						<TaskList {...provided.droppableProps} tasks={tasks}>
-							{provided.placeholder}
 						</TaskList>
+						{provided.placeholder}
 					</div>
 				)}
 			</Droppable>

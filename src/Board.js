@@ -1,6 +1,10 @@
+import { useState } from 'react'
 import Column from './Column'
-import { Flex, IconButton } from '@chakra-ui/react'
+import { Container, IconButton, useDisclosure } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
+import { DragDropContext } from 'react-beautiful-dnd'
+import NewColumnModal from './NewColumnModal'
+import { v4 as uuidv4 } from 'uuid';
 
 const DUMMY_DATA = {
 	tasks: {
@@ -28,22 +32,72 @@ const DUMMY_DATA = {
 	columnOrder: ['column-1', 'column-2', 'column-3']
 }
 
-const columns = DUMMY_DATA.columnOrder.map((columnId, index) => (
-	<Column
-		key={columnId}
-		id={columnId}
-        index={index}
-		title={DUMMY_DATA.columns[columnId].title}
-		taskIds={DUMMY_DATA.columns[columnId].taskIds}
-		tasks={DUMMY_DATA.columns[columnId].taskIds.map(taskId => DUMMY_DATA.tasks[taskId])}
-	/>
-))
-
 const Board = () => {
-	return <Flex m={5}>
-        {columns}
-        <IconButton isRound={true} aria-label="Add column" icon={<AddIcon />} />
-        </Flex>
+	const [data, setData] = useState(DUMMY_DATA)
+	const { isOpen, onOpen, onClose } = useDisclosure()
+
+
+	const handleOnDragEnd = result => {
+		if (!result.destination) return
+		const sourceCol = result.source.droppableId
+		const destCol = result.destination.droppableId
+		setData(prevState => {
+			return {
+				...prevState,
+				...prevState.columns[sourceCol].taskIds.splice(
+					result.source.index,
+					1
+				),
+				...prevState.columns[destCol].taskIds.splice(
+					result.destination.index,
+					0,
+					result.draggableId
+				)
+			}
+		})
+	}
+
+	const handleNewColumn = (newColumnTitle) => {
+		const newColumn = {
+			id: uuidv4(),
+			title: newColumnTitle,
+			taskIds: []
+		}
+		setData(prevState => ({
+			...prevState,
+			...prevState.columns[newColumn.id] = newColumn, 
+			...prevState.columnOrder.push(newColumn.id)
+		}))
+	}
+
+	const columns = DUMMY_DATA.columnOrder.map((columnId, index) => (
+		<Column
+			key={columnId}
+			id={columnId}
+			index={index}
+			title={data.columns[columnId].title}
+			taskIds={data.columns[columnId].taskIds}
+			tasks={data.columns[columnId].taskIds.map(
+				taskId => data.tasks[taskId]
+			)}
+			onDrop={handleOnDragEnd}
+		/>
+	))
+
+	return (
+		<DragDropContext onDragEnd={handleOnDragEnd}>
+			<NewColumnModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} onAdd={handleNewColumn}/>
+			<Container display='flex' m={5}>
+				{columns}
+				<IconButton
+					isRound={true}
+					aria-label="Add column"
+					icon={<AddIcon />}
+					onClick={onOpen}
+				/>
+			</Container>
+		</DragDropContext>
+	)
 }
 
 export default Board

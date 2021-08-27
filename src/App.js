@@ -1,12 +1,11 @@
-import { DragDropContext } from 'react-beautiful-dnd'
 import Board from './Board'
+import Header from './Header'
 
 const App = () => {
-	return (
-			<DragDropContext>
+	return (<>
+				<Header />
 				<Board />
-			</DragDropContext>
-	)
+	</>)
 }
 
 export default App
