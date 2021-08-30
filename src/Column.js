@@ -10,7 +10,7 @@ import {
 import { Formik, Form, Field } from 'formik'
 import TaskList from './TaskList'
 
-const Column = ({ id, title, tasks, index, onTitleSubmit }) => {
+const Column = ({ id, title, tasks, index, onTitleSubmit, onColorChange }) => {
 	const [editTitle, setEditTitle] = useState(false)
 
 	const handleTitleSelect = () => {
@@ -77,7 +77,8 @@ const Column = ({ id, title, tasks, index, onTitleSubmit }) => {
 							<div ref={provided.innerRef}>
 								<TaskList
 									{...provided.droppableProps}
-									tasks={tasks}></TaskList>
+									tasks={tasks}
+									onColorChange={onColorChange}></TaskList>
 								{provided.placeholder}
 							</div>
 						)}

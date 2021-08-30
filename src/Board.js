@@ -14,32 +14,9 @@ import NewColumnModal from './NewColumnModal'
 import AddTask from './AddTask'
 import TableView from './TableView'
 import { v4 as uuidv4 } from 'uuid'
+import DUMMY_DATA from './data'
 
-const DUMMY_DATA = {
-	tasks: {
-		'task-1': { id: 'task-1', content: 'Buy supplies' },
-		'task-2': { id: 'task-2', content: 'Prepare meals' },
-		'task-3': { id: 'task-3', content: 'Pass the food to delivery person' }
-	},
-	columns: {
-		'column-1': {
-			id: 'column-1',
-			title: 'Backlog',
-			taskIds: ['task-1', 'task-2', 'task-3']
-		},
-		'column-2': {
-			id: 'column-2',
-			title: 'Doing',
-			taskIds: []
-		},
-		'column-3': {
-			id: 'column-3',
-			title: 'Done',
-			taskIds: []
-		}
-	},
-	columnOrder: ['column-1', 'column-2', 'column-3']
-}
+
 
 const Board = () => {
 	const [data, setData] = useState(DUMMY_DATA)
@@ -95,7 +72,7 @@ const Board = () => {
 	const handleNewTask = taskTitle => {
 		const newTask = {
 			id: uuidv4(),
-			content: taskTitle
+			title: taskTitle
 		}
 		setData(prevState => ({
 			...prevState,
@@ -115,6 +92,13 @@ const Board = () => {
 
 	const handleViewToggle = () => {
 		setView(prevState => (prevState === 'board' ? 'table' : 'board'))
+	}
+
+	const handleColorChange = (taskId, color) => {
+		setData(prevState => ({
+			...prevState,
+			...prevState.tasks[taskId].color = color
+		}))
 	}
 
 	const board = (
@@ -137,6 +121,7 @@ const Board = () => {
 								)}
 								onDrop={handleOnDragEnd}
 								onTitleSubmit={handleColumnTitleChange}
+								onColorChange={handleColorChange}
 							/>
 						))}
 						<IconButton
@@ -174,7 +159,9 @@ const Board = () => {
 					/>
 				</Flex>
 				<AddTask onSubmit={handleNewTask} />
-				<Flex mt={5}>{view === 'board' ? board : <TableView data={data}/>}</Flex>
+				<Flex mt={5}>
+					{view === 'board' ? board : <TableView data={data} />}
+				</Flex>
 			</Flex>
 		</DragDropContext>
 	)
