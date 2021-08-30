@@ -1,7 +1,8 @@
 import { Flex } from "@chakra-ui/react"
 import Task from "./Task"
 
-const TaskList = ({ tasks, onColorChange }) => {
+const TaskList = ({ tasks, onColorChange, onTaskSubmit, columnId }) => {
+
     return (<Flex direction="column">
         {tasks.map((task, index) => <Task key={task.id} id={task.id} title={task.title} owner={task.owner} color={task.color} index={index} onColorChange={onColorChange}></Task>)}
         </Flex>)

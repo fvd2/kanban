@@ -12,7 +12,7 @@ export const colors = {
 		3: '#48BB78',
 		4: '#38B2AC',
 		5: '#4299e1',
-		6: '#9F7AEA'
+		6: '#EAEAEA'
 	}
 }
 

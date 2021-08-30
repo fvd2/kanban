@@ -1,23 +1,49 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Draggable, Droppable } from 'react-beautiful-dnd'
 import {
+	Box,
 	Container,
-	Center,
+	Flex,
+	FormControl,
 	Heading,
+	IconButton,
 	Input,
-	FormControl
+	Text
 } from '@chakra-ui/react'
 import { Formik, Form, Field } from 'formik'
+import AddTask from "./AddTask"
 import TaskList from './TaskList'
+import { EditIcon } from '@chakra-ui/icons'
 
-const Column = ({ id, title, tasks, index, onTitleSubmit, onColorChange }) => {
-	const [editTitle, setEditTitle] = useState(false)
+const Column = ({
+	width,
+	id,
+	title,
+	tasks,
+	index,
+	onColumnSubmit,
+	onTaskSubmit,
+	onColorChange
+}) => {
+	const [isEditingTitle, setEditingTitle] = useState(false)
+	const inputRef = useRef()
+	useEffect(() => {
+		if(isEditingTitle) {
+			inputRef.current.focus()
+		}
+	},[isEditingTitle])
 
 	const handleTitleSelect = () => {
-		setEditTitle(prevState => !prevState)
+		setEditingTitle(prevState => !prevState)
 	}
 
-	const editColumnField = (
+	const [isOpen, setIsOpen] = useState(false)
+
+    const toggleAddTask = () => {
+        setIsOpen(prevState => !prevState)
+    }
+
+	const editTitleField = (
 		<Formik
 			initialValues={{ columnName: title }}
 			validate={values => {
@@ -28,7 +54,7 @@ const Column = ({ id, title, tasks, index, onTitleSubmit, onColorChange }) => {
 				return errors
 			}}
 			onSubmit={values => {
-				onTitleSubmit({ id, title: values.columnName })
+				onColumnSubmit({ id, title: values.columnName })
 				handleTitleSelect()
 			}}>
 			{({ handleSubmit, errors }) => (
@@ -38,6 +64,7 @@ const Column = ({ id, title, tasks, index, onTitleSubmit, onColorChange }) => {
 							<FormControl isInvalid={errors.columnName}>
 								<Input
 									{...field}
+									ref={inputRef}
 									name="columnName"
 									placeholder="Column name"
 									onBlur={handleSubmit}
@@ -51,42 +78,58 @@ const Column = ({ id, title, tasks, index, onTitleSubmit, onColorChange }) => {
 	)
 
 	return (
-		<Draggable draggableId={id} index={index}>
-			{provided => (
-				<Container
-					ref={provided.innerRef}
-					{...provided.draggableProps}
-					{...provided.dragHandleProps}
-					mr="1em"
-					borderRadius="5px"
-					bg="#F0EFEB">
-					<Center>
-						{editTitle ? (
-							editColumnField
-						) : (
-							<Heading
-								onClick={handleTitleSelect}
-								m={2}
-								size={'lg'}>
-								{title}
-							</Heading>
-						)}
-					</Center>
-					<Droppable droppableId={id} type="task" index={index}>
-						{provided => (
-							<div ref={provided.innerRef}>
-								<TaskList
-									{...provided.droppableProps}
-									tasks={tasks}
-									onColorChange={onColorChange}></TaskList>
-								{provided.placeholder}
-							</div>
-						)}
-					</Droppable>
-					{provided.placeholder}
-				</Container>
-			)}
-		</Draggable>
+		<Box>
+			<Draggable draggableId={id} index={index}>
+				{provided => (
+					<Container
+						width={width}
+						ref={provided.innerRef}
+						{...provided.draggableProps}
+						{...provided.dragHandleProps}
+						p={5}>
+						<Box
+							align="center"
+							bg="#FFFFFF"
+							mb={3}
+							p={0}
+							border="1px solid #CACFD6"
+							borderRadius={2}>
+							{isEditingTitle ? (
+								editTitleField
+							) : (
+								<Flex align="center" justify="space-between">
+									<Heading
+										ml={3} mt={1}
+										mb={1}
+										align="center"
+										lineHeight="unset"
+										size="sm">
+										{title}
+									</Heading>
+									<IconButton onClick={handleTitleSelect} size="sm" variant="unstyled" icon={<EditIcon />} />
+								</Flex>
+							)}
+						</Box>
+						<Box mb={3} borderBottom="2px solid #CACFD6" />
+						<Droppable droppableId={id} type="task" index={index}>
+							{provided => (
+								<div ref={provided.innerRef}>
+									<TaskList
+										{...provided.droppableProps}
+										tasks={tasks}
+										onColorChange={onColorChange}
+										onTaskSubmit={onTaskSubmit}
+										columnId={id}></TaskList>
+									{provided.placeholder}
+								</div>
+							)}
+						</Droppable>
+						{provided.placeholder}
+						{!isOpen ? <Text justify="center" color="#666666" onClick={toggleAddTask}>+ Add Task</Text> : <AddTask onSubmit={onTaskSubmit} hideTaskInput={toggleAddTask} isOpen={isOpen} columnId={id}/>}
+					</Container>
+				)}
+			</Draggable>
+		</Box>
 	)
 }
 

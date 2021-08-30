@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Draggable } from 'react-beautiful-dnd'
 import {
 	Avatar,
@@ -8,8 +7,6 @@ import {
 	IconButton,
 	Popover,
 	PopoverContent,
-	PopoverCloseButton,
-	PopoverHeader,
 	PopoverTrigger,
 	Portal,
 	Text
@@ -17,15 +14,13 @@ import {
 import { colors } from './theme'
 
 const Task = ({ id, index, title, color, owner, onColorChange }) => {
-	const [popover, setPopover] = useState(false)
 
 	const handleColorChange = (colorId, onClose) => {
 		onColorChange(id, colors.tasks[colorId])
-		setPopover(false)
 		onClose()
 	}
 
-	const availableColors = [1, 2, 3, 4, 5]
+	const availableColors = [1, 2, 3, 4, 5, 6]
 	const colorButtons = onClose =>
 		availableColors.map(colorId => (
 			<IconButton
@@ -48,7 +43,8 @@ const Task = ({ id, index, title, color, owner, onColorChange }) => {
 						bg="white"
 						m={0.5}
 						p={2}
-						borderRadius={5}
+						border="1px solid #CACFD6"
+						borderRadius={2}
 						boxShadow={'2x1'}
 						{...provided.draggableProps}
 						ref={provided.innerRef}

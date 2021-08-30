@@ -1,8 +1,15 @@
+import { useState, useRef, useEffect } from 'react'
 import { Button, Flex, Input } from '@chakra-ui/react'
-import { useState } from 'react'
 
-const AddTask = ({ onSubmit }) => {
+const AddTask = ({ onSubmit, hideTaskInput, isOpen, columnId}) => {
 	const [action, setAction] = useState('')
+	const inputRef = useRef()
+
+	useEffect(() => {
+		if (isOpen) {
+			inputRef.current.focus()
+		}
+	}, [isOpen])
 
 	const handleChange = event => {
 		setAction(event.target.value)
@@ -10,17 +17,29 @@ const AddTask = ({ onSubmit }) => {
 
 	const handleSubmit = event => {
 		event.preventDefault()
-		onSubmit(action)
-		setAction('')
+		if(action.trim().length > 0) {
+			onSubmit(action, columnId)
+			setAction('')
+			hideTaskInput()
+		}
+		else {
+			hideTaskInput()
+		}
+	}
+
+	const handleBlur = () => {
+		hideTaskInput()
 	}
 
 	return (
 		<form onSubmit={handleSubmit}>
 			<Flex>
 				<Input
+					ref={inputRef}
 					value={action}
 					placeholder="Your next task"
 					onChange={handleChange}
+					onBlur={handleBlur}
 				/>
 				<Button type="submit" isDisabled={!action} colorScheme="blue">
 					Add

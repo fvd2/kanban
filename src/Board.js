@@ -1,22 +1,12 @@
 import { useState } from 'react'
-import Column from './Column'
-import {
-	Container as Box,
-	Flex,
-	useDisclosure,
-	IconButton,
-	Icon
-} from '@chakra-ui/react'
+import { Box, Flex, IconButton, Icon, useDisclosure } from '@chakra-ui/react'
 import { BsKanban, BsTable } from 'react-icons/bs'
-import { AddIcon } from '@chakra-ui/icons'
-import { DragDropContext, Droppable } from 'react-beautiful-dnd'
+import { DragDropContext } from 'react-beautiful-dnd'
 import NewColumnModal from './NewColumnModal'
-import AddTask from './AddTask'
+import BoardView from './BoardView'
 import TableView from './TableView'
 import { v4 as uuidv4 } from 'uuid'
 import DUMMY_DATA from './data'
-
-
 
 const Board = () => {
 	const [data, setData] = useState(DUMMY_DATA)
@@ -69,17 +59,16 @@ const Board = () => {
 		}))
 	}
 
-	const handleNewTask = taskTitle => {
+	const handleNewTask = (taskTitle, columnId) => {
 		const newTask = {
 			id: uuidv4(),
-			title: taskTitle
+			title: taskTitle,
+			color: '#EAEAEA'
 		}
 		setData(prevState => ({
 			...prevState,
 			...(prevState.tasks[newTask.id] = newTask),
-			...prevState.columns[
-				Object.keys(prevState.columns)[0]
-			].taskIds.push(newTask.id)
+			...prevState.columns[columnId].taskIds.push(newTask.id)
 		}))
 	}
 
@@ -97,73 +86,51 @@ const Board = () => {
 	const handleColorChange = (taskId, color) => {
 		setData(prevState => ({
 			...prevState,
-			...prevState.tasks[taskId].color = color
+			...(prevState.tasks[taskId].color = color)
 		}))
 	}
 
-	const board = (
-		<Droppable droppableId="board" type="column" direction="horizontal">
-			{provided => (
-				<>
-					<Box
-						display="flex"
-						ref={provided.innerRef}
-						{...provided.droppableProps}>
-						{DUMMY_DATA.columnOrder.map((columnId, index) => (
-							<Column
-								key={columnId}
-								id={columnId}
-								index={index}
-								title={data.columns[columnId].title}
-								taskIds={data.columns[columnId].taskIds}
-								tasks={data.columns[columnId].taskIds.map(
-									taskId => data.tasks[taskId]
-								)}
+	return (
+		<Box m={0} p={0} bg="#F4F4F4">
+			<DragDropContext onDragEnd={handleOnDragEnd}>
+				<NewColumnModal
+					isOpen={isOpen}
+					onOpen={onOpen}
+					onClose={onClose}
+					onAdd={handleNewColumn}
+				/>
+				<Flex direction="column">
+					<Flex mb={5}>
+						<IconButton
+							isDisabled={view === 'board'}
+							onClick={handleViewToggle}
+							icon={<Icon as={BsKanban} />}
+						/>
+						<IconButton
+							isDisabled={view === 'table'}
+							onClick={handleViewToggle}
+							icon={<Icon as={BsTable} />}
+						/>
+					</Flex>
+					<Flex mt={5}>
+						{view === 'board' ? (
+							<BoardView
+								data={data}
+								onOpen={onOpen}
+								onTaskSubmit={handleNewTask}
 								onDrop={handleOnDragEnd}
-								onTitleSubmit={handleColumnTitleChange}
+								onColumnSubmit={handleColumnTitleChange}
 								onColorChange={handleColorChange}
 							/>
-						))}
-						<IconButton
-							isRound={true}
-							aria-label="Add column"
-							icon={<AddIcon />}
-							onClick={onOpen}
-						/>
-					</Box>
-					{provided.placeholder}
-				</>
-			)}
-		</Droppable>
-	)
-
-	return (
-		<DragDropContext onDragEnd={handleOnDragEnd}>
-			<NewColumnModal
-				isOpen={isOpen}
-				onOpen={onOpen}
-				onClose={onClose}
-				onAdd={handleNewColumn}
-			/>
-			<Flex direction="column" m={5}>
-				<Flex mb={5}>
-					<IconButton
-						isDisabled={view === 'board'}
-						onClick={handleViewToggle}
-						icon={<Icon as={BsKanban} />}
-					/>
-					<IconButton
-						isDisabled={view === 'table'}
-						onClick={handleViewToggle}
-						icon={<Icon as={BsTable} />}
-					/>
+						) : (
+							<TableView
+								data={data}
+							/>
+						)}
+					</Flex>
 				</Flex>
-				<AddTask onSubmit={handleNewTask} />
-				<Flex mt={5}>
-					{view === 'board' ? board : <TableView data={data} />}
-				</Flex>
-			</Flex>
-		</DragDropContext>
+			</DragDropContext>
+		</Box>
 	)
 }
 
