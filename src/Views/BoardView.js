@@ -1,8 +1,8 @@
-import Column from './Column'
+import Column from '../Columns/Column'
 import { Box, IconButton } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 import { Droppable } from 'react-beautiful-dnd'
-import DUMMY_DATA from './data'
+import DUMMY_DATA from '../data'
 
 const BoardView = ({
 	data,

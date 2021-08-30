@@ -1,7 +1,7 @@
-import Header from './Header'
-import Board from './Board'
-import Footer from './Footer'
-import SideBar from './SideBar'
+import Header from './Layout/Header'
+import Body from './Body'
+import Footer from './Layout/Footer'
+import SideBar from './Layout/SideBar'
 import { Flex } from '@chakra-ui/react'
 
 const App = () => {
@@ -10,7 +10,7 @@ const App = () => {
 			<Header />
 			<Flex>
 				<SideBar />
-				<Board />
+				<Body />
 			</Flex>
 			<Footer />
 		</>

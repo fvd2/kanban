@@ -11,7 +11,7 @@ import {
 	Portal,
 	Text
 } from '@chakra-ui/react'
-import { colors } from './theme'
+import { colors } from '../theme'
 
 const Task = ({ id, index, title, color, owner, onColorChange }) => {
 

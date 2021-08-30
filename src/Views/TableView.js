@@ -1,6 +1,6 @@
 import { Flex, Table, Thead, Tr, Th, Tbody, Td } from '@chakra-ui/react'
 
-const TableView = ({ data, onTaskSubmit }) => {
+const TableView = ({ data }) => {
 
 	const tableRows = Object.values(data.columns).map(column =>
 		column.taskIds.map(task => (

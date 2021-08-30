@@ -2,13 +2,13 @@ import { useState } from 'react'
 import { Box, Flex, IconButton, Icon, useDisclosure } from '@chakra-ui/react'
 import { BsKanban, BsTable } from 'react-icons/bs'
 import { DragDropContext } from 'react-beautiful-dnd'
-import NewColumnModal from './NewColumnModal'
-import BoardView from './BoardView'
-import TableView from './TableView'
+import NewColumnModal from './Columns/NewColumnModal'
+import BoardView from './Views/BoardView'
+import TableView from './Views/TableView'
 import { v4 as uuidv4 } from 'uuid'
 import DUMMY_DATA from './data'
 
-const Board = () => {
+const Body = () => {
 	const [data, setData] = useState(DUMMY_DATA)
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const [view, setView] = useState('board')
@@ -134,4 +134,4 @@ const Board = () => {
 	)
 }
 
-export default Board
+export default Body
