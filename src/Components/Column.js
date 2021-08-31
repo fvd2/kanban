@@ -11,8 +11,8 @@ import {
 	Text
 } from '@chakra-ui/react'
 import { Formik, Form, Field } from 'formik'
-import AddTask from "../Tasks/AddTask"
-import TaskList from '../Tasks/TaskList'
+import TaskAddNew from "../Components/TaskAddNew"
+import TaskList from '../Components/TaskList'
 import { EditIcon } from '@chakra-ui/icons'
 
 const Column = ({
@@ -125,7 +125,7 @@ const Column = ({
 							)}
 						</Droppable>
 						{provided.placeholder}
-						{!isOpen ? <Text justify="center" color="#666666" onClick={toggleAddTask}>+ Add Task</Text> : <AddTask onSubmit={onTaskSubmit} hideTaskInput={toggleAddTask} isOpen={isOpen} columnId={id}/>}
+						{!isOpen ? <Text justify="center" color="#666666" onClick={toggleAddTask}>+ Add Task</Text> : <TaskAddNew onSubmit={onTaskSubmit} hideTaskInput={toggleAddTask} isOpen={isOpen} columnId={id}/>}
 					</Container>
 				)}
 			</Draggable>

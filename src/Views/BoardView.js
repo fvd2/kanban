@@ -1,4 +1,4 @@
-import Column from '../Columns/Column'
+import Column from '../Components/Column'
 import { Box, IconButton } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 import { Droppable } from 'react-beautiful-dnd'

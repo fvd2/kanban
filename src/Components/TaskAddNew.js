@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { Button, Flex, Input } from '@chakra-ui/react'
 
-const AddTask = ({ onSubmit, hideTaskInput, isOpen, columnId}) => {
+const TaskAddNew = ({ onSubmit, hideTaskInput, isOpen, columnId}) => {
 	const [action, setAction] = useState('')
 	const inputRef = useRef()
 
@@ -49,4 +49,4 @@ const AddTask = ({ onSubmit, hideTaskInput, isOpen, columnId}) => {
 	)
 }
 
-export default AddTask
+export default TaskAddNew

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Box, Flex, IconButton, Icon, useDisclosure } from '@chakra-ui/react'
 import { BsKanban, BsTable } from 'react-icons/bs'
 import { DragDropContext } from 'react-beautiful-dnd'
-import NewColumnModal from './Columns/NewColumnModal'
+import ColumnAddNew from './Components/ColumnAddNew'
 import BoardView from './Views/BoardView'
 import TableView from './Views/TableView'
 import { v4 as uuidv4 } from 'uuid'
@@ -93,7 +93,7 @@ const Body = () => {
 	return (
 		<Box m={0} p={0} bg="#F4F4F4">
 			<DragDropContext onDragEnd={handleOnDragEnd}>
-				<NewColumnModal
+				<ColumnAddNew
 					isOpen={isOpen}
 					onOpen={onOpen}
 					onClose={onClose}

@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react'
 import { Formik, Form, Field } from 'formik'
 
-const NewColumnModal = ({ isOpen, onClose, onAdd }) => {
+const ColumnAddNew = ({ isOpen, onClose, onAdd }) => {
 	return (
 		<Modal isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
@@ -71,4 +71,4 @@ const NewColumnModal = ({ isOpen, onClose, onAdd }) => {
 	)
 }
 
-export default NewColumnModal
+export default ColumnAddNew
