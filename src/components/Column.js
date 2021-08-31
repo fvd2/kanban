@@ -11,8 +11,8 @@ import {
 	Text
 } from '@chakra-ui/react'
 import { Formik, Form, Field } from 'formik'
-import TaskAddNew from "../Components/TaskAddNew"
-import TaskList from '../Components/TaskList'
+import TaskAddNew from "../components/TaskAddNew"
+import TaskList from '../components/TaskList'
 import { EditIcon } from '@chakra-ui/icons'
 
 const Column = ({

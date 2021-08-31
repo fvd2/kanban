@@ -1,8 +1,7 @@
-import Column from '../Components/Column'
+import Column from '../components/Column'
 import { Box, IconButton } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 import { Droppable } from 'react-beautiful-dnd'
-import DUMMY_DATA from '../data'
 
 const BoardView = ({
 	data,
@@ -20,7 +19,7 @@ const BoardView = ({
 						display="flex"
 						ref={provided.innerRef}
 						{...provided.droppableProps}>
-						{DUMMY_DATA.columnOrder.map((columnId, index) => (
+						{data.columnOrder.map((columnId, index) => (
 							<Column
 								width="250px"
 								key={columnId}
