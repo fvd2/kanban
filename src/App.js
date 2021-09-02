@@ -176,8 +176,6 @@ const reducer = (state, action) => {
 const App = () => {
 	const [appData, dispatch] = useReducer(reducer, initialState)
 
-	console.log(appData)
-
 	const handleListSwitch = event => {
 		dispatch({
 			type: 'selectList',

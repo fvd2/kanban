@@ -54,10 +54,6 @@ const Body = ({ taskListData, activeList, dispatch }) => {
 
 	const handleColumnTitleChange = (columnId, columnName) => {
 		dispatch({ type: 'renameColumn', payload: { columnId, columnName } })
-		// setData(prevState => ({
-		// 	...prevState,
-		// 	...(prevState.columns[colData.id].title = colData.title)
-		// }))
 	}
 
 	const handleDeleteColumn = (typeAndPayload) => {
