@@ -8,42 +8,46 @@ const BoardView = ({
 	onOpen,
 	onDrop,
 	onColumnSubmit,
-	onTaskSubmit,
-	onColorChange
+	onColorChange,
+	onAddTask,
+	onDeleteColumn
 }) => {
 	return (
 		<Droppable droppableId="board" type="column" direction="horizontal">
 			{provided => (
 				<>
-					<Box
-						display="flex"
-						ref={provided.innerRef}
-						{...provided.droppableProps}>
-						{data.columnOrder.map((columnId, index) => (
-							<Column
-								width="250px"
-								key={columnId}
-								id={columnId}
-								index={index}
-								title={data.columns[columnId].title}
-								taskIds={data.columns[columnId].taskIds}
-								tasks={data.columns[columnId].taskIds.map(
-									taskId => data.tasks[taskId]
-								)}
-								onDrop={onDrop}
-								onColumnSubmit={onColumnSubmit}
-								onTaskSubmit={onTaskSubmit}
-								onColorChange={onColorChange}
-							/>
+					{data && (
+						<Box
+							display="flex"
+							ref={provided.innerRef}
+							{...provided.droppableProps}>
+							{data.columnOrder.map((columnId, index) => (
+								<Column
+									width="250px"
+									key={columnId}
+									id={columnId}
+									index={index}
+									title={data.columns[columnId].title}
+									taskIds={data.columns[columnId].taskIds}
+									tasks={data.columns[columnId].taskIds.map(
+										taskId => data.tasks[taskId]
+									)}
+									onDrop={onDrop}
+									onColumnSubmit={onColumnSubmit}
+									onColorChange={onColorChange}
+									onAddTask={onAddTask}
+									onDeleteColumn={onDeleteColumn}
+								/>
 							))}
 							{provided.placeholder}
-						<IconButton
-							isRound={true}
-							aria-label="Add column"
-							icon={<AddIcon />}
-							onClick={onOpen}
-						/>
-					</Box>
+							<IconButton
+								isRound={true}
+								aria-label="Add column"
+								icon={<AddIcon />}
+								onClick={onOpen}
+							/>
+						</Box>
+					)}
 				</>
 			)}
 		</Droppable>

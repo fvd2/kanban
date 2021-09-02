@@ -5,102 +5,63 @@ import { DragDropContext } from 'react-beautiful-dnd'
 import ColumnAddNew from './components/ColumnAddNew'
 import BoardView from './views/BoardView'
 import TableView from './views/TableView'
-import { v4 as uuidv4 } from 'uuid'
-import DUMMY_DATA from './data'
 
-const Body = ({ activeList, taskLists }) => {
-	const [data, setData] = useState(DUMMY_DATA)
+const Body = ({ taskListData, activeList, dispatch }) => {
+	const [data, setData] = useState(taskListData)
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const [view, setView] = useState('board')
 
 	useEffect(() => {
-		const newListName = taskLists[taskLists.length - 1]
-		const newListObj = {
-			name: newListName,
-			tasks: {},
-			columns: {
-				id: 'column-1',
-				title: 'column-1',
-				taskIds: []
-			},
-			columnOrder: ['column-1']
-		}
-		console.log(newListName)
-		setData(prevState => ({
-			...prevState,
-			...(prevState[newListName] = newListObj)
-		}))
-	}, [taskLists])
-
-	console.log(data)
+		setData(taskListData)
+	}, [taskListData])
 
 	const handleOnDragEnd = result => {
 		if (result.type === 'column') {
-			setData(prevState => ({
-				...prevState,
-				...prevState[activeList].columnOrder.splice(
-					result.source.index,
-					1
-				),
-				...prevState[activeList].columnOrder.splice(
-					result.destination.index,
-					0,
-					result.draggableId
-				)
-			}))
+			dispatch({
+				type: 'moveColumn',
+				payload: {
+					sourceIndex: result.source.index,
+					destinationIndex: result.destination.index,
+					draggableId: result.draggableId
+				}
+			})
 		}
 		if (result.type === 'task') {
 			if (!result.destination) return
-			const sourceCol = result.source.droppableId
-			const destCol = result.destination.droppableId
-			setData(prevState => {
-				return {
-					...prevState,
-					...prevState[activeList].columns[sourceCol].taskIds.splice(
-						result.source.index,
-						1
-					),
-					...prevState[activeList].columns[destCol].taskIds.splice(
-						result.destination.index,
-						0,
-						result.draggableId
-					)
+			dispatch({
+				type: 'moveTask',
+				payload: {
+					sourceColumn: result.source.droppableId,
+					sourceIndex: result.source.index,
+					destinationColumn: result.destination.droppableId,
+					destinationIndex: result.destination.index,
+					draggableId: result.draggableId
 				}
 			})
 		}
 	}
 
-	const handleNewColumn = newColumnTitle => {
-		const newColumn = {
-			id: uuidv4(),
-			title: newColumnTitle,
-			taskIds: []
-		}
-		setData(prevState => ({
-			...prevState,
-			...(prevState[activeList].columns[newColumn.id] = newColumn),
-			...prevState[activeList].columnOrder.push(newColumn.id)
-		}))
-	}
-
 	const handleNewTask = (taskTitle, columnId) => {
-		const newTask = {
-			id: uuidv4(),
-			title: taskTitle,
-			color: '#EAEAEA'
-		}
-		setData(prevState => ({
-			...prevState,
-			...(prevState[activeList].tasks[newTask.id] = newTask),
-			...prevState[activeList].columns[columnId].taskIds.push(newTask.id)
-		}))
+		dispatch({
+			type: 'addTask',
+			payload: {
+				taskTitle,
+				activeList: taskListData.activeList,
+				columnId
+			}
+		})
 	}
 
-	const handleColumnTitleChange = colData => {
-		setData(prevState => ({
-			...prevState,
-			...(prevState[activeList].columns[colData.id].title = colData.title)
-		}))
+	const handleColumnTitleChange = (columnId, columnName) => {
+		dispatch({ type: 'renameColumn', payload: { columnId, columnName } })
+		// setData(prevState => ({
+		// 	...prevState,
+		// 	...(prevState.columns[colData.id].title = colData.title)
+		// }))
+	}
+
+	const handleDeleteColumn = (typeAndPayload) => {
+		dispatch(typeAndPayload)
 	}
 
 	const handleViewToggle = () => {
@@ -110,7 +71,7 @@ const Body = ({ activeList, taskLists }) => {
 	const handleColorChange = (taskId, color) => {
 		setData(prevState => ({
 			...prevState,
-			...(prevState[activeList].tasks[taskId].color = color)
+			...(prevState.tasks[taskId].color = color)
 		}))
 	}
 
@@ -121,7 +82,8 @@ const Body = ({ activeList, taskLists }) => {
 					isOpen={isOpen}
 					onOpen={onOpen}
 					onClose={onClose}
-					onAdd={handleNewColumn}
+					activeList={taskListData.activeList}
+					dispatch={dispatch}
 				/>
 				<Flex direction="column">
 					<Flex mb={5}>
@@ -139,12 +101,14 @@ const Body = ({ activeList, taskLists }) => {
 					<Flex mt={5}>
 						{view === 'board' ? (
 							<BoardView
-								data={data[activeList]}
+								data={data.taskLists[activeList]}
 								onOpen={onOpen}
-								onTaskSubmit={handleNewTask}
+								dispatch={dispatch}
 								onDrop={handleOnDragEnd}
 								onColumnSubmit={handleColumnTitleChange}
+								onAddTask={handleNewTask}
 								onColorChange={handleColorChange}
+								onDeleteColumn={handleDeleteColumn}
 							/>
 						) : (
 							<TableView data={data[activeList]} />

@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from 'react'
 import { Button, Flex, Input } from '@chakra-ui/react'
 
-const ListAddNew = ({ onSubmit, hideInput, isOpen }) => {
-	const [list, setList] = useState('')
+const ListAddNew = ({ hideInput, isOpen, onSubmit }) => {
+	const [listName, setListName] = useState('')
 	const inputRef = useRef()
 
 	useEffect(() => {
@@ -12,14 +12,14 @@ const ListAddNew = ({ onSubmit, hideInput, isOpen }) => {
 	}, [isOpen])
 
 	const handleChange = event => {
-		setList(event.target.value)
+		setListName(event.target.value)
 	}
 
 	const handleSubmit = event => {
 		event.preventDefault()
-		if(list.trim().length > 0) {
-			onSubmit(list)
-			setList('')
+		if(listName.trim().length > 0) {
+			onSubmit({type: 'addList', payload: listName})
+			setListName('')
 			hideInput()
 		}
 		else {
@@ -36,12 +36,12 @@ const ListAddNew = ({ onSubmit, hideInput, isOpen }) => {
 			<Flex>
 				<Input
 					ref={inputRef}
-					value={list}
+					value={listName}
 					placeholder="List name"
 					onChange={handleChange}
 					onBlur={handleBlur}
 				/>
-				<Button type="submit" isDisabled={!list} colorScheme="blue">
+				<Button type="submit" isDisabled={!listName} colorScheme="blue">
 					Add
 				</Button>
 			</Flex>

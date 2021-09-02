@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react'
 import { Formik, Form, Field } from 'formik'
 
-const ColumnAddNew = ({ isOpen, onClose, onAdd }) => {
+const ColumnAddNew = ({ isOpen, onClose, dispatch, activeList }) => {
 	return (
 		<Modal isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
@@ -29,7 +29,7 @@ const ColumnAddNew = ({ isOpen, onClose, onAdd }) => {
 					}}
 					onSubmit={(values, { setSubmitting }) => {
 						setTimeout(() => {
-							onAdd(values.columnName)
+							dispatch({type: 'addColumn', payload: { activeList, columnName: values.columnName}})
 							setSubmitting(false)
 							onClose()
 						}, 100)

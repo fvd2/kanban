@@ -11,9 +11,9 @@ import {
 	Text
 } from '@chakra-ui/react'
 import { Formik, Form, Field } from 'formik'
-import TaskAddNew from "../components/TaskAddNew"
+import TaskAddNew from '../components/TaskAddNew'
 import TaskList from '../components/TaskList'
-import { EditIcon } from '@chakra-ui/icons'
+import { DeleteIcon, EditIcon } from '@chakra-ui/icons'
 
 const Column = ({
 	width,
@@ -22,26 +22,41 @@ const Column = ({
 	tasks,
 	index,
 	onColumnSubmit,
-	onTaskSubmit,
-	onColorChange
+	onColorChange,
+	onDeleteColumn,
+	onAddTask
 }) => {
+	const [optionsAreOpen, setOptionsAreOpen] = useState(false)
 	const [isEditingTitle, setEditingTitle] = useState(false)
+	const [isOpen, setIsOpen] = useState(false)
 	const inputRef = useRef()
+
 	useEffect(() => {
-		if(isEditingTitle) {
+		if (isEditingTitle) {
 			inputRef.current.focus()
 		}
-	},[isEditingTitle])
+	}, [isEditingTitle])
+
+	const toggleOptions = event => {
+		if (event.type === 'mouseover' || event.type === 'mouseenter') {
+			setOptionsAreOpen(true)
+		}
+		if (event.type === 'mouseleave') {
+			setOptionsAreOpen(false)
+		}
+	}
 
 	const handleTitleSelect = () => {
 		setEditingTitle(prevState => !prevState)
 	}
 
-	const [isOpen, setIsOpen] = useState(false)
+	const handleDelete = () => {
+		onDeleteColumn({ type: 'deleteColumn', payload: { columnId: id, index }})
+	}
 
-    const toggleAddTask = () => {
-        setIsOpen(prevState => !prevState)
-    }
+	const toggleAddTask = () => {
+		setIsOpen(prevState => !prevState)
+	}
 
 	const editTitleField = (
 		<Formik
@@ -54,7 +69,7 @@ const Column = ({
 				return errors
 			}}
 			onSubmit={values => {
-				onColumnSubmit({ id, title: values.columnName })
+				onColumnSubmit(id, values.columnName)
 				handleTitleSelect()
 			}}>
 			{({ handleSubmit, errors }) => (
@@ -97,16 +112,37 @@ const Column = ({
 							{isEditingTitle ? (
 								editTitleField
 							) : (
-								<Flex align="center" justify="space-between">
+								<Flex
+									onMouseEnter={toggleOptions}
+									onMouseOver={toggleOptions}
+									onMouseLeave={toggleOptions}
+									align="center"
+									justify="space-between">
 									<Heading
-										ml={3} mt={1}
+										ml={3}
+										mt={1}
 										mb={1}
 										align="center"
 										lineHeight="unset"
 										size="sm">
 										{title}
 									</Heading>
-									<IconButton onClick={handleTitleSelect} size="sm" variant="unstyled" icon={<EditIcon />} />
+									{optionsAreOpen && (
+										<Box>
+											<IconButton
+												onClick={handleTitleSelect}
+												size="sm"
+												variant="unstyled"
+												icon={<EditIcon />}
+											/>
+											<IconButton
+												onClick={handleDelete}
+												size="sm"
+												variant="unstyled"
+												icon={<DeleteIcon />}
+											/>
+										</Box>
+									)}
 								</Flex>
 							)}
 						</Box>
@@ -118,14 +154,27 @@ const Column = ({
 										{...provided.droppableProps}
 										tasks={tasks}
 										onColorChange={onColorChange}
-										onTaskSubmit={onTaskSubmit}
 										columnId={id}></TaskList>
 									{provided.placeholder}
 								</div>
 							)}
 						</Droppable>
 						{provided.placeholder}
-						{!isOpen ? <Text justify="center" color="#666666" onClick={toggleAddTask}>+ Add Task</Text> : <TaskAddNew onSubmit={onTaskSubmit} hideTaskInput={toggleAddTask} isOpen={isOpen} columnId={id}/>}
+						{!isOpen ? (
+							<Text
+								justify="center"
+								color="#666666"
+								onClick={toggleAddTask}>
+								+ Add Task
+							</Text>
+						) : (
+							<TaskAddNew
+								onAddTask={onAddTask}
+								hideTaskInput={toggleAddTask}
+								isOpen={isOpen}
+								columnId={id}
+							/>
+						)}
 					</Container>
 				)}
 			</Draggable>
