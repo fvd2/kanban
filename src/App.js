@@ -44,28 +44,38 @@ const reducer = (state, action) => {
 				})
 			}
 		case 'renameList':
+			// update taskListName (activeList, taskList property name, taskList.name value)
+
+			const renameProp = (oldProp, newProp, { [oldProp]: old, ...others }) => ({
+				// source: https://medium.com/front-end-weekly/immutably-rename-object-keys-in-javascript-5f6353c7b6dd
+				[newProp]: old,
+				...others
+			})
+			const updatedTaskListNames = renameProp([action.payload.listName], [action.payload.newName], state.taskLists)
+			updatedTaskListNames[action.payload.newName].name = action.payload.newName
+
 			const currentIndex = state.listOrder.findIndex(
 				list => list === action.payload.listName
-			)
-			const replaceListName = listName => action.payload.newName
+				)
+				
 			return update(state, {
-				taskLists: {
-					[action.payload.listName]: {
-						name: { $set: action.payload.newName }
+					taskLists: { $set: updatedTaskListNames },
+					listOrder: {
+						$splice: [[currentIndex, 1, action.payload.newName]]
 					},
-					[action.payload.listName]: replaceListName // TODO: check if necessary
-				},
-				listOrder: {
-					$splice: [[currentIndex, 1, action.payload.newName]]
-				}
-			})
+					activeList: { $set: action.payload.newName }
+				})		
 		case 'selectList':
 			return update(state, {
 				activeList: { $set: action.payload.selectedList }
 			})
 		case 'moveList':
-			return ''
-
+			// not using immutability-helper splice due to expected flickering issue (see moveColumn)
+			return {
+				...state,
+				...state.listOrder.splice(action.payload.sourceIndex, 1),
+				...state.listOrder.splice(action.payload.destinationIndex, 0, action.payload.draggableId)
+			}
 		// column-level actions
 		case 'addColumn':
 			const newColumn = {
@@ -162,11 +172,15 @@ const reducer = (state, action) => {
 					destinationColumn
 				].taskIds.splice(destinationIndex, 0, draggableId)
 			}
+
+			// TODO: fix lagging move of +Add Task on moving last task from column
 		case 'editTask':
 			// TODO
 			return ''
 		case 'deleteTask':
 			// TODO
+			return ''
+		case 'changeTaskColor':
 			return ''
 		default:
 			throw new Error()
@@ -183,6 +197,7 @@ const App = () => {
 		})
 	}
 
+	console.log(appData)
 	return (
 		<>
 			<Flex>
