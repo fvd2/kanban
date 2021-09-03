@@ -45,8 +45,8 @@ const Body = ({ taskListData, activeList, dispatch }) => {
 		dispatch({
 			type: 'addTask',
 			payload: {
-				taskTitle,
 				activeList,
+				taskTitle,
 				columnId
 			}
 		})
@@ -56,7 +56,7 @@ const Body = ({ taskListData, activeList, dispatch }) => {
 		dispatch({ type: 'renameColumn', payload: { columnId, columnName } })
 	}
 
-	const handleDeleteColumn = (typeAndPayload) => {
+	const handleDeleteColumn = typeAndPayload => {
 		dispatch(typeAndPayload)
 	}
 
@@ -65,10 +65,11 @@ const Body = ({ taskListData, activeList, dispatch }) => {
 	}
 
 	const handleColorChange = (taskId, color) => {
-		setData(prevState => ({
-			...prevState,
-			...(prevState.tasks[taskId].color = color)
-		}))
+		// activeList added here, not prop drilled to Task component
+		dispatch({
+			type: 'changeTaskColor',
+			payload: { activeList, taskId, color }
+		})
 	}
 
 	return (
@@ -107,7 +108,7 @@ const Body = ({ taskListData, activeList, dispatch }) => {
 								onDeleteColumn={handleDeleteColumn}
 							/>
 						) : (
-							<TableView data={data[activeList]} />
+							<TableView data={data.taskLists[activeList]} />
 						)}
 					</Flex>
 				</Flex>
