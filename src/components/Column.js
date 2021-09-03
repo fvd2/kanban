@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react'
 import { Formik, Form, Field } from 'formik'
 import TaskAddNew from '../components/TaskAddNew'
-import TaskList from '../components/TaskList'
+import TaskOverview from './TaskOverview'
 import { DeleteIcon, EditIcon } from '@chakra-ui/icons'
 
 const Column = ({
@@ -24,7 +24,8 @@ const Column = ({
 	onColumnSubmit,
 	onColorChange,
 	onDeleteColumn,
-	onAddTask
+	onAddTask,
+	activeList
 }) => {
 	const [optionsAreOpen, setOptionsAreOpen] = useState(false)
 	const [isEditingTitle, setEditingTitle] = useState(false)
@@ -150,11 +151,12 @@ const Column = ({
 						<Droppable droppableId={id} type="task" index={index}>
 							{provided => (
 								<div ref={provided.innerRef}>
-									<TaskList
+									<TaskOverview
 										{...provided.droppableProps}
 										tasks={tasks}
 										onColorChange={onColorChange}
-										columnId={id}></TaskList>
+										activeList={activeList}
+										columnId={id}></TaskOverview>
 									{provided.placeholder}
 								</div>
 							)}

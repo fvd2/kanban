@@ -193,7 +193,17 @@ const reducer = (state, action) => {
 			// TODO
 			return ''
 		case 'changeTaskColor':
-			return ''
+			return update(state, {
+				taskLists: {
+					[state.activeList]: {
+						tasks: {
+							[action.payload.taskId]: {
+								color: { $set: action.payload.color }
+							}
+						}
+					}
+				}
+			})
 		default:
 			throw new Error()
 	}
