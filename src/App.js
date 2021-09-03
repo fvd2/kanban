@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from 'uuid'
 import update from 'immutability-helper'
 
 const reducer = (state, action) => {
+	let stateCopy = { ...state }
 	switch (action.type) {
 		// list-level actions
 		case 'addList':
@@ -46,36 +47,48 @@ const reducer = (state, action) => {
 		case 'renameList':
 			// update taskListName (activeList, taskList property name, taskList.name value)
 
-			const renameProp = (oldProp, newProp, { [oldProp]: old, ...others }) => ({
+			const renameProp = (
+				oldProp,
+				newProp,
+				{ [oldProp]: old, ...others }
+			) => ({
 				// source: https://medium.com/front-end-weekly/immutably-rename-object-keys-in-javascript-5f6353c7b6dd
 				[newProp]: old,
 				...others
 			})
-			const updatedTaskListNames = renameProp([action.payload.listName], [action.payload.newName], state.taskLists)
-			updatedTaskListNames[action.payload.newName].name = action.payload.newName
+			const updatedTaskListNames = renameProp(
+				[action.payload.listName],
+				[action.payload.newName],
+				state.taskLists
+			)
+			updatedTaskListNames[action.payload.newName].name =
+				action.payload.newName
 
 			const currentIndex = state.listOrder.findIndex(
 				list => list === action.payload.listName
-				)
-				
+			)
+
 			return update(state, {
-					taskLists: { $set: updatedTaskListNames },
-					listOrder: {
-						$splice: [[currentIndex, 1, action.payload.newName]]
-					},
-					activeList: { $set: action.payload.newName }
-				})		
+				taskLists: { $set: updatedTaskListNames },
+				listOrder: {
+					$splice: [[currentIndex, 1, action.payload.newName]]
+				},
+				activeList: { $set: action.payload.newName }
+			})
 		case 'selectList':
 			return update(state, {
 				activeList: { $set: action.payload.selectedList }
 			})
 		case 'moveList':
 			// not using immutability-helper splice due to expected flickering issue (see moveColumn)
-			return {
-				...state,
-				...state.listOrder.splice(action.payload.sourceIndex, 1),
-				...state.listOrder.splice(action.payload.destinationIndex, 0, action.payload.draggableId)
-			}
+			stateCopy.listOrder.splice(action.payload.sourceIndex, 1)
+			stateCopy.listOrder.splice(
+				action.payload.destinationIndex,
+				0,
+				action.payload.draggableId
+			)
+
+			return stateCopy
 		// column-level actions
 		case 'addColumn':
 			const newColumn = {
@@ -98,18 +111,17 @@ const reducer = (state, action) => {
 			})
 		case 'moveColumn':
 			// not using immutability-helper splice due to flickering issue
-			return {
-				...state,
-				...state.taskLists[state.activeList].columnOrder.splice(
-					action.payload.sourceIndex,
-					1
-				),
-				...state.taskLists[state.activeList].columnOrder.splice(
-					action.payload.destinationIndex,
-					0,
-					action.payload.draggableId
-				)
-			}
+			stateCopy.taskLists[state.activeList].columnOrder.splice(
+				action.payload.sourceIndex,
+				1
+			)
+			stateCopy.taskLists[state.activeList].columnOrder.splice(
+				action.payload.destinationIndex,
+				0,
+				action.payload.draggableId
+			)
+			return stateCopy
+
 		case 'renameColumn':
 			return update(state, {
 				taskLists: {
@@ -163,17 +175,17 @@ const reducer = (state, action) => {
 				destinationIndex,
 				draggableId
 			} = action.payload
-			return {
-				...state,
-				...state.taskLists[state.activeList].columns[
-					sourceColumn
-				].taskIds.splice(sourceIndex, 1),
-				...state.taskLists[state.activeList].columns[
-					destinationColumn
-				].taskIds.splice(destinationIndex, 0, draggableId)
-			}
 
-			// TODO: fix lagging move of +Add Task on moving last task from column
+			stateCopy.taskLists[stateCopy.activeList].columns[
+				destinationColumn
+			].taskIds.splice(destinationIndex, 0, draggableId)
+			stateCopy.taskLists[stateCopy.activeList].columns[
+				sourceColumn
+			].taskIds.splice(sourceIndex, 1)
+
+			return stateCopy
+
+		// TODO: fix lagging move of +Add Task on moving last task from column
 		case 'editTask':
 			// TODO
 			return ''
