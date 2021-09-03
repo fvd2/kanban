@@ -11,7 +11,8 @@ const BoardView = ({
 	onColorChange,
 	onAddTask,
 	onDeleteColumn,
-	activeList
+	onDeleteTask,
+	onSubmitEditedTask
 }) => {
 	return (
 		<Droppable droppableId="board" type="column" direction="horizontal">
@@ -38,6 +39,8 @@ const BoardView = ({
 									onColorChange={onColorChange}
 									onAddTask={onAddTask}
 									onDeleteColumn={onDeleteColumn}
+									onDeleteTask={onDeleteTask}
+									onSubmitEditedTask={onSubmitEditedTask}
 								/>
 							))}
 							{provided.placeholder}

@@ -25,7 +25,9 @@ const Column = ({
 	onColorChange,
 	onDeleteColumn,
 	onAddTask,
-	activeList
+	activeList,
+	onDeleteTask,
+	onSubmitEditedTask
 }) => {
 	const [optionsAreOpen, setOptionsAreOpen] = useState(false)
 	const [isEditingTitle, setEditingTitle] = useState(false)
@@ -52,7 +54,10 @@ const Column = ({
 	}
 
 	const handleDelete = () => {
-		onDeleteColumn({ type: 'deleteColumn', payload: { columnId: id, index }})
+		onDeleteColumn({
+			type: 'deleteColumn',
+			payload: { columnId: id, index }
+		})
 	}
 
 	const toggleAddTask = () => {
@@ -156,7 +161,10 @@ const Column = ({
 										tasks={tasks}
 										onColorChange={onColorChange}
 										activeList={activeList}
-										columnId={id}></TaskOverview>
+										columnId={id}
+										onDeleteTask={onDeleteTask}
+										onSubmitEditedTask={onSubmitEditedTask}
+									/>
 									{provided.placeholder}
 								</div>
 							)}

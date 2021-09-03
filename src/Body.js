@@ -15,6 +15,14 @@ const Body = ({ taskListData, activeList, dispatch }) => {
 		setData(taskListData)
 	}, [taskListData])
 
+	const [columnTitlesToIds] = useState(
+		new Map(
+			Object.values(taskListData.taskLists[activeList].columns).map(
+				column => [column.title, column.id]
+			)
+		)
+	)
+
 	const handleOnDragEnd = result => {
 		if (result.type === 'column') {
 			dispatch({
@@ -52,6 +60,10 @@ const Body = ({ taskListData, activeList, dispatch }) => {
 		})
 	}
 
+	const handleDeleteTask = (columnId, taskId, index) => {
+		dispatch({ type: 'deleteTask', payload: { columnId, taskId, index } })
+	}
+
 	const handleColumnTitleChange = (columnId, columnName) => {
 		dispatch({ type: 'renameColumn', payload: { columnId, columnName } })
 	}
@@ -69,6 +81,26 @@ const Body = ({ taskListData, activeList, dispatch }) => {
 		dispatch({
 			type: 'changeTaskColor',
 			payload: { activeList, taskId, color }
+		})
+	}
+
+	const handleSubmitEditedTask = ({
+		taskId,
+		title,
+		color,
+		owner,
+		columnId
+	}) => {
+		dispatch({
+			type: 'editTask',
+			payload: { columnId, taskId, title, color, owner }
+		})
+	}
+
+	const handleNewDetailedTask = ({ title, color, owner, columnId }) => {
+		dispatch({
+			type: 'addDetailedTask',
+			payload: { columnId, title, color, owner }
 		})
 	}
 
@@ -106,9 +138,15 @@ const Body = ({ taskListData, activeList, dispatch }) => {
 								onAddTask={handleNewTask}
 								onColorChange={handleColorChange}
 								onDeleteColumn={handleDeleteColumn}
+								onDeleteTask={handleDeleteTask}
+								onSubmitEditedTask={handleSubmitEditedTask}
 							/>
 						) : (
-							<TableView data={data.taskLists[activeList]} />
+							<TableView
+								data={data.taskLists[activeList]}
+								columnTitlesToIds={columnTitlesToIds}
+								onAddNewDetailedTask={handleNewDetailedTask}
+							/>
 						)}
 					</Flex>
 				</Flex>

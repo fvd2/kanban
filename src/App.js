@@ -156,11 +156,33 @@ const reducer = (state, action) => {
 
 			return update(state, {
 				taskLists: {
-					[action.payload.activeList]: {
+					[state.activeList]: {
 						tasks: { $merge: { [newTask.id]: newTask } },
 						columns: {
 							[action.payload.columnId]: {
 								taskIds: { $push: [newTask.id] }
+							}
+						}
+					}
+				}
+			})
+		case 'addDetailedTask':
+			const newDetailedTask = {
+				id: uuidv4(),
+				title: action.payload.title,
+				color: action.payload.color,
+				owner: action.payload.owner,
+				columnId: action.payload.columnId
+			}
+			console.log(newDetailedTask)
+
+			return update(state, {
+				taskLists: {
+					[state.activeList]: {
+						tasks: { $merge: { [newDetailedTask.id]: newDetailedTask } },
+						columns: {
+							[newDetailedTask.columnId]: {
+								taskIds: { $push: [newDetailedTask.id] }
 							}
 						}
 					}
@@ -176,22 +198,45 @@ const reducer = (state, action) => {
 				draggableId
 			} = action.payload
 
-			stateCopy.taskLists[stateCopy.activeList].columns[
-				destinationColumn
-			].taskIds.splice(destinationIndex, 0, draggableId)
+			console.log(action.payload)
 			stateCopy.taskLists[stateCopy.activeList].columns[
 				sourceColumn
 			].taskIds.splice(sourceIndex, 1)
+			stateCopy.taskLists[stateCopy.activeList].columns[
+				destinationColumn
+			].taskIds.splice(destinationIndex, 0, draggableId)
 
 			return stateCopy
 
 		// TODO: fix lagging move of +Add Task on moving last task from column
 		case 'editTask':
-			// TODO
-			return ''
+			const updatedTask = {
+				id: action.payload.taskId,
+				title: action.payload.title,
+				color: action.payload.color,
+				owner: action.payload.owner
+			}
+			return update(state, {
+				taskLists: {
+					[state.activeList]: {
+						tasks: { 
+							[action.payload.taskId]: {$set: updatedTask } }
+					}
+				}
+			})
 		case 'deleteTask':
-			// TODO
-			return ''
+			return update(state, {
+				taskLists: {
+					[state.activeList]: {
+						tasks: { $unset: [action.payload.taskId] },
+						columns: {
+							[action.payload.columnId]: {
+								taskIds: { $splice: [[action.payload.index, 1]]}
+							}
+						}
+					}
+				}
+			})
 		case 'changeTaskColor':
 			return update(state, {
 				taskLists: {
