@@ -46,7 +46,7 @@ const Body = ({ taskListData, activeList, dispatch }) => {
 			type: 'addTask',
 			payload: {
 				taskTitle,
-				activeList: taskListData.activeList,
+				activeList,
 				columnId
 			}
 		})
