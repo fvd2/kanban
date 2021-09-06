@@ -27,7 +27,9 @@ const Column = ({
 	onAddTask,
 	activeList,
 	onDeleteTask,
-	onSubmitEditedTask
+	onSubmitEditedTask,
+	columns,
+	columnTitlesToIds
 }) => {
 	const [optionsAreOpen, setOptionsAreOpen] = useState(false)
 	const [isEditingTitle, setEditingTitle] = useState(false)
@@ -164,6 +166,8 @@ const Column = ({
 										columnId={id}
 										onDeleteTask={onDeleteTask}
 										onSubmitEditedTask={onSubmitEditedTask}
+										columns={columns}
+										columnTitlesToIds={columnTitlesToIds}
 									/>
 									{provided.placeholder}
 								</div>

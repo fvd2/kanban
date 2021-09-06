@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
 	Button,
 	Circle,
@@ -28,19 +28,33 @@ const TaskView = ({
 	title,
 	color,
 	owner,
+	index,
 	taskHandler,
-	columns = [],
+	columnId,
+	columns,
 	columnTitlesToIds
 }) => {
 	const [selectedColor, setSelectedColor] = useState(color)
-	const [selectedColumn, setSelectedColumn] = useState()
+	const [selectedColumn, setSelectedColumn] = useState(
+		columnTitlesToIds.get(columnId)
+	)
 	const availableColors = [1, 2, 3, 4, 5, 6]
 
-	const columnRef = useRef()
+	const columnRef = useRef(columnTitlesToIds.get(columnId))
+
+	// prevent Drawer state update after saving task changes 
+	useEffect(() => {
+		let contentIsShown = true
+		if (contentIsShown === false) {
+			onClose()
+		}
+		return () => { contentIsShown = false }
+	})
 
 	const handleColumnChange = () => {
 		setSelectedColumn(columnRef.current.value)
 	}
+
 	const colorButtons = availableColors.map(colorId => {
 		if (selectedColor === colors.tasks[colorId].trim()) {
 			return (
@@ -81,8 +95,7 @@ const TaskView = ({
 				<Formik
 					initialValues={{
 						title,
-						owner,
-						column: { ...(columns.length > 0 ? columns[0] : '') }
+						owner
 					}}
 					validate={values => {
 						const errors = {}
@@ -92,17 +105,19 @@ const TaskView = ({
 						return errors
 					}}
 					onSubmit={(values, { setSubmitting }) => {
-						setTimeout(() => {
 							taskHandler({
 								taskId: id,
 								title: values.title,
 								owner: values.owner,
 								color: selectedColor,
-								columnId: {...columnTitlesToIds ? columnTitlesToIds.get(selectedColumn) : '' }
+								sourceColumn: columnId,
+								columnId: columnTitlesToIds.get(selectedColumn),
+								destinationColumn:
+									columnTitlesToIds.get(selectedColumn),
+								index: index
 							})
 							setSubmitting(false)
 							onClose()
-						}, 100)
 					}}>
 					{({ errors, touched, isSubmitting }) => (
 						<Form>
@@ -145,44 +160,37 @@ const TaskView = ({
 										</FormControl>
 									)}
 								</Field>
-								{id === '' && (
-									<Field name="category">
-										{({ field }) => (
-											<FormControl
-												mb={3}
-												isInvalid={
-													errors.title &&
-													touched.title
-												}>
-												<Text>Title:</Text>
-												<Select
-													ref={columnRef}
-													onChange={
-														handleColumnChange
-													}>
-													{Object.values(columns).map(
-														column => (
-															<option
-																key={column.id}
-																id={column.id}
-																value={
-																	column.title
-																}>
-																{column.title}
-															</option>
-														)
-													)}
-												</Select>
-
-												<FormErrorMessage>
-													{errors.title}
-												</FormErrorMessage>
-											</FormControl>
-										)}
-									</Field>
-								)}
-								<Text>Color:</Text>
-								<Flex>{colorButtons}</Flex>
+								<>
+									<Text>Category:</Text>
+									<Select
+										ref={columnRef}
+										onChange={handleColumnChange}
+										mb={3}>
+										<option
+											key={columnId}
+											value={columnTitlesToIds.get(
+												columnId
+											)}>
+											{columnTitlesToIds.get(columnId)}
+										</option>
+										{columns.map(column => {
+											if (
+												column ===
+												columnTitlesToIds.get(columnId)
+											)
+												return ''
+											return (
+												<option
+													key={column}
+													value={column}>
+													{column}
+												</option>
+											)
+										})}
+									</Select>
+									<Text>Color:</Text>
+									<Flex>{colorButtons}</Flex>
+								</>
 							</DrawerBody>
 							<DrawerFooter>
 								<Button variant="ghost" onClick={onClose}>
@@ -192,7 +200,7 @@ const TaskView = ({
 									colorScheme="blue"
 									type="submit"
 									mr={3}
-									isDisabled={errors.columnName}
+									isDisabled={errors.title || errors.owner}
 									isLoading={isSubmitting}>
 									Submit
 								</Button>

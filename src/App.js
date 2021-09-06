@@ -175,7 +175,6 @@ const reducer = (state, action) => {
 				owner: action.payload.owner,
 				columnId: action.payload.columnId
 			}
-			console.log(newDetailedTask)
 
 			return update(state, {
 				taskLists: {
@@ -199,7 +198,6 @@ const reducer = (state, action) => {
 				draggableId
 			} = action.payload
 
-			console.log(action.payload)
 			stateCopy.taskLists[stateCopy.activeList].columns[
 				sourceColumn
 			].taskIds.splice(sourceIndex, 1)
@@ -217,7 +215,24 @@ const reducer = (state, action) => {
 				color: action.payload.color,
 				owner: action.payload.owner
 			}
-			return update(state, {
+			if (action.payload.sourceColumn !== action.payload.destinationColumn) {
+				return update(state, {
+					taskLists: {
+						[state.activeList]: {
+							tasks: { 
+								[action.payload.taskId]: {$set: updatedTask } },
+							columns: {
+								[action.payload.sourceColumn]: {
+									taskIds: { $splice: [[action.payload.index,1]]}
+								},
+								[action.payload.destinationColumn]: {
+									taskIds: { $push: [action.payload.taskId]}
+								}  
+							}
+						}
+					}
+				})}
+			else return update(state, {
 				taskLists: {
 					[state.activeList]: {
 						tasks: { 
@@ -265,7 +280,6 @@ const App = () => {
 		})
 	}
 
-	console.log(appData)
 	return (
 		<>
 			<Flex>

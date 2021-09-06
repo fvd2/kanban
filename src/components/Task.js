@@ -31,14 +31,16 @@ const Task = ({
 	onColorChange,
 	onDeleteTask,
 	columnId,
-	onSubmitEditedTask
+	onSubmitEditedTask,
+	columns,
+	columnTitlesToIds
 }) => {
 	const [optionsAreOpen, setOptionsAreOpen] = useState(false)
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const btnRef = useRef()
-	const handleColorChange = (colorId, onClose) => {
+	const handleColorChange = (colorId, onClosePopover) => {
 		onColorChange(id, colors.tasks[colorId])
-		onClose()
+		onClosePopover()
 	}
 
 	const handleOptions = event => {
@@ -100,7 +102,7 @@ const Task = ({
 							{...provided.dragHandleProps}>
 							<Flex align="center">
 								<Popover>
-									{({ onClose }) => (
+									{({ onClosePopover }) => (
 										<>
 											<PopoverTrigger>
 												<Circle
@@ -115,7 +117,7 @@ const Task = ({
 													width="auto"
 													p={1}>
 													<Flex>
-														{colorButtons(onClose)}
+														{colorButtons(onClosePopover)}
 													</Flex>
 												</PopoverContent>
 											</Portal>
@@ -136,23 +138,24 @@ const Task = ({
 											{title}
 										</Text>
 									</Tooltip>
+									<TaskView
+										btnRef={btnRef}
+										isOpen={isOpen}
+										onClose={onClose}
+										heading="Edit task"
+										id={id}
+										title={title}
+										color={color}
+										owner={owner}
+										taskHandler={submitEditedTask}
+										columns={columns}
+										columnTitlesToIds={columnTitlesToIds}
+										columnId={columnId}
+										index={index}
+									/>
+
 									{optionsAreOpen ? (
 										<>
-											{isOpen && (
-												<TaskView
-													btnRef={btnRef}
-													isOpen={isOpen}
-													onClose={onClose}
-													heading="Edit task"
-													id={id}
-													title={title}
-													color={color}
-													owner={owner}
-													taskHandler={
-														submitEditedTask
-													}
-												/>
-											)}
 											<Menu>
 												<MenuButton
 													as={IconButton}

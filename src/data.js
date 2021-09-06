@@ -84,7 +84,7 @@ const data = {
 					taskIds: []
 				},
 				'column-4': {
-					id: 'column-3',
+					id: 'column-4',
 					title: 'Approved',
 					taskIds: []
 				}

@@ -12,7 +12,8 @@ const BoardView = ({
 	onAddTask,
 	onDeleteColumn,
 	onDeleteTask,
-	onSubmitEditedTask
+	onSubmitEditedTask,
+	columnTitlesToIds
 }) => {
 	return (
 		<Droppable droppableId="board" type="column" direction="horizontal">
@@ -41,6 +42,8 @@ const BoardView = ({
 									onDeleteColumn={onDeleteColumn}
 									onDeleteTask={onDeleteTask}
 									onSubmitEditedTask={onSubmitEditedTask}
+									columns={Object.values(data.columns).map(column => column.title)}
+									columnTitlesToIds={columnTitlesToIds}
 								/>
 							))}
 							{provided.placeholder}

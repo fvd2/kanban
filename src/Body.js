@@ -15,13 +15,19 @@ const Body = ({ taskListData, activeList, dispatch }) => {
 		setData(taskListData)
 	}, [taskListData])
 
+	// creates two-way map between column titles (e.g. 'backlog') and ids
 	const [columnTitlesToIds] = useState(
 		new Map(
-			Object.values(taskListData.taskLists[activeList].columns).map(
-				column => [column.title, column.id]
+			Object.values(
+				taskListData.taskLists[activeList].columns)
+					.map(column => [column.title, column.id])
+					.concat(
+						Object.values(
+							taskListData.taskLists[activeList].columns
+						).map(column => [column.id, column.title])
+					)
 			)
 		)
-	)
 
 	const handleOnDragEnd = result => {
 		if (result.type === 'column') {
@@ -89,11 +95,23 @@ const Body = ({ taskListData, activeList, dispatch }) => {
 		title,
 		color,
 		owner,
-		columnId
+		columnId,
+		sourceColumn,
+		destinationColumn,
+		index
 	}) => {
 		dispatch({
 			type: 'editTask',
-			payload: { columnId, taskId, title, color, owner }
+			payload: {
+				columnId,
+				taskId,
+				title,
+				color,
+				owner,
+				sourceColumn,
+				destinationColumn,
+				index
+			}
 		})
 	}
 
@@ -140,12 +158,15 @@ const Body = ({ taskListData, activeList, dispatch }) => {
 								onDeleteColumn={handleDeleteColumn}
 								onDeleteTask={handleDeleteTask}
 								onSubmitEditedTask={handleSubmitEditedTask}
+								columnTitlesToIds={columnTitlesToIds}
 							/>
 						) : (
 							<TableView
 								data={data.taskLists[activeList]}
 								columnTitlesToIds={columnTitlesToIds}
 								onAddNewDetailedTask={handleNewDetailedTask}
+								onSubmitEditedTask={handleSubmitEditedTask}
+								onDeleteTask={handleDeleteTask}
 							/>
 						)}
 					</Flex>
