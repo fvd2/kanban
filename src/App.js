@@ -151,7 +151,8 @@ const reducer = (state, action) => {
 			const newTask = {
 				id: uuidv4(),
 				title: action.payload.taskTitle,
-				color: '#EAEAEA'
+				color: '#EAEAEA',
+				owner: ''
 			}
 
 			return update(state, {

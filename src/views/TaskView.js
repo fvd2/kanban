@@ -37,12 +37,10 @@ const TaskView = ({
 	const availableColors = [1, 2, 3, 4, 5, 6]
 
 	const columnRef = useRef()
-	console.log(columnTitlesToIds)
 
 	const handleColumnChange = () => {
-		setSelectedColumn(columnRef.current.id)
+		setSelectedColumn(columnRef.current.value)
 	}
-
 	const colorButtons = availableColors.map(colorId => {
 		if (selectedColor === colors.tasks[colorId].trim()) {
 			return (
@@ -100,7 +98,7 @@ const TaskView = ({
 								title: values.title,
 								owner: values.owner,
 								color: selectedColor,
-								columnId: columnTitlesToIds.get(selectedColumn)
+								columnId: {...columnTitlesToIds ? columnTitlesToIds.get(selectedColumn) : '' }
 							})
 							setSubmitting(false)
 							onClose()
