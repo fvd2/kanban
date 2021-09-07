@@ -52,7 +52,7 @@ const SideBar = ({ taskLists, activeList, onListSwitch, dispatch }) => {
 					<Avatar ml={2} size="sm" />
 				</Flex>
 				<Heading size="md" mb={3} color="white">
-					Task lists
+					Task Lists
 				</Heading>
 				<TaskListOverview
 					taskLists={taskLists}

@@ -101,6 +101,7 @@ const TaskListItem = ({
 							<Text
 								cursor="pointer"
 								size="md"
+								aria-label="Task list selector"
 								{...(listName === activeList
 									? { as: 'b' }
 									: '')}

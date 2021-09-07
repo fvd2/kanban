@@ -8,7 +8,7 @@ ReactDOM.render(
   <React.StrictMode>
     <ColorModeScript initialColorMode={theme.config.initialColorMode}/>
 		<ChakraProvider theme={theme}>
-    <App />
+      <App />
 		</ChakraProvider>
   </React.StrictMode>,
   document.getElementById('root')

@@ -49,7 +49,7 @@ const BoardView = ({
 							{provided.placeholder}
 							<IconButton
 								isRound={true}
-								aria-label="Add column"
+								aria-label="Add column button"
 								icon={<AddIcon />}
 								onClick={onOpen}
 							/>

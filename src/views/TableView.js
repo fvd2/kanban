@@ -29,7 +29,6 @@ const TableView = ({ data, onAddNewDetailedTask, columnTitlesToIds, onSubmitEdit
 		onOpen()
 	}
 
-
 	return (
 		<Flex ref={portalRef} direction="column">
 			<Table variant="simple">

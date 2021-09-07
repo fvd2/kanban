@@ -7,7 +7,6 @@ import { Droppable } from 'react-beautiful-dnd'
 const TaskListOverview = ({
 	taskLists,
 	activeList,
-	onSubmit,
 	onListSwitch,
 	dispatch
 }) => {
@@ -31,6 +30,7 @@ const TaskListOverview = ({
 						return (
 							<TaskListItem
 								key={listName}
+								id={listName}
 								index={index}
 								listName={listName}
 								onDelete={handleList}

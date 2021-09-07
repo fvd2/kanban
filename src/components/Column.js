@@ -178,6 +178,7 @@ const Column = ({
 							<Text
 								justify="center"
 								color="#666666"
+								aria-label="Add task button"
 								onClick={toggleAddTask}>
 								+ Add Task
 							</Text>
