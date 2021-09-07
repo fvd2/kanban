@@ -89,8 +89,8 @@ const TaskListItem = ({
 					height="50px"
 					width="100%"
 					{...provided.draggableProps}
-						ref={provided.innerRef}
-						{...provided.dragHandleProps}
+					ref={provided.innerRef}
+					{...provided.dragHandleProps}
 					onMouseEnter={toggleOptions}
 					onMouseOver={toggleOptions}
 					onMouseLeave={toggleOptions}>
@@ -101,6 +101,7 @@ const TaskListItem = ({
 							<Text
 								cursor="pointer"
 								size="md"
+								mr={1}
 								aria-label="Task list selector"
 								{...(listName === activeList
 									? { as: 'b' }
@@ -109,22 +110,41 @@ const TaskListItem = ({
 								onClick={onListSwitch}>
 								{listName}
 							</Text>
-							{optionsAreOpen && (
-								<Box>
-									<IconButton
-										bg="transparent"
-										isRound={true}
-										onClick={handleDelete}
-										icon={<DeleteIcon />}
-									/>
-									<IconButton
-										bg="transparent"
-										isRound={true}
-										onClick={handleEdit}
-										icon={<EditIcon />}
-									/>
-								</Box>
-							)}
+							<Box>
+								{optionsAreOpen ? (
+									<>
+										<IconButton
+											colorScheme="whiteAlpha"
+											size="xs"
+											bg="transparent"
+											isRound={true}
+											onClick={handleEdit}
+											icon={<EditIcon />}
+										/>
+										<IconButton
+											colorScheme="whiteAlpha"
+											isRound={true}
+											size="xs"
+											bg="transparent"
+											onClick={handleDelete}
+											icon={<DeleteIcon />}
+										/>
+									</>
+								) : (
+									<>
+										<IconButton
+											size="xs"
+											bg="transparent"
+											isRound={true}
+										/>
+										<IconButton
+											size="xs"
+											bg="transparent"
+											isRound={true}
+										/>
+									</>
+								)}
+							</Box>
 						</Flex>
 					)}
 					{provided.placeholder}

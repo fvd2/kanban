@@ -1,8 +1,7 @@
-import { useReducer } from 'react'
+import { useState, useReducer } from 'react'
 import Body from './Body'
-import Footer from './layout/Footer'
 import SideBar from './layout/SideBar'
-import { Flex } from '@chakra-ui/react'
+import { Flex, useMediaQuery } from '@chakra-ui/react'
 import initialState from './data'
 import { v4 as uuidv4 } from 'uuid'
 import update from 'immutability-helper'
@@ -272,6 +271,8 @@ const reducer = (state, action) => {
 
 const App = () => {
 	const [appData, dispatch] = useReducer(reducer, initialState)
+	const [menuIsToggled, setMenuIsToggled] = useState(false)
+	const [isSmallerThan768] = useMediaQuery("(max-width: 767px)")
 
 	const handleListSwitch = event => {
 		dispatch({
@@ -280,22 +281,30 @@ const App = () => {
 		})
 	}
 
+	const toggleMenu = () => {
+		setMenuIsToggled(prevState => !prevState)
+	}
+
 	return (
 		<>
-			<Flex>
-				<SideBar
+			<Flex direction={{ base: 'column', md: 'row' }}>
+				{(!isSmallerThan768 || menuIsToggled) && <SideBar
 					taskLists={appData.listOrder}
 					activeList={appData.activeList}
 					onListSwitch={handleListSwitch}
 					dispatch={dispatch}
-				/>
-				<Body
+					menuIsToggled={menuIsToggled}
+					toggleMenu={toggleMenu}
+				/>}
+				{!menuIsToggled && <Body
 					taskListData={appData}
 					activeList={appData.activeList}
 					dispatch={dispatch}
-				/>
+					toggleMenu={toggleMenu}
+					menuIsToggled={menuIsToggled}
+					isSmallerThan768={isSmallerThan768}
+				/>}
 			</Flex>
-			<Footer />
 		</>
 	)
 }

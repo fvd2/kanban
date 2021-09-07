@@ -1,16 +1,13 @@
 import {
-	Avatar,
 	Flex,
 	Heading,
 	IconButton,
-	useColorMode
 } from '@chakra-ui/react'
 import { DragDropContext } from 'react-beautiful-dnd'
-import { SunIcon, MoonIcon } from '@chakra-ui/icons'
+import { CloseIcon } from '@chakra-ui/icons'
 import TaskListOverview from '../components/TaskListOverview'
 
-const SideBar = ({ taskLists, activeList, onListSwitch, dispatch }) => {
-	const { colorMode, toggleColorMode } = useColorMode()
+const SideBar = ({ taskLists, activeList, onListSwitch, dispatch, menuIsToggled, toggleMenu }) => {
 
 	const handleOnDragEnd = result => {
 		if (!result.destination) return
@@ -24,6 +21,9 @@ const SideBar = ({ taskLists, activeList, onListSwitch, dispatch }) => {
 		})
 	}
 
+	console.log(menuIsToggled)
+
+
 	return (
 		<DragDropContext onDragEnd={handleOnDragEnd}>
 			<Flex
@@ -32,28 +32,20 @@ const SideBar = ({ taskLists, activeList, onListSwitch, dispatch }) => {
 				pl={5}
 				pr={5}
 				bg="#424874"
-				width="400px">
-				<Flex align="center">
-					{colorMode === 'dark' ? (
-						<IconButton
-							bg="transparent"
-							isRound={true}
-							onClick={toggleColorMode}
-							icon={<SunIcon />}
-						/>
-					) : (
-						<IconButton
-							bg="transparent"
-							isRound={true}
-							onClick={toggleColorMode}
-							icon={<MoonIcon />}
-						/>
-					)}
-					<Avatar ml={2} size="sm" />
-				</Flex>
+				w={{ base: '100%', md: 'auto', lg: '25%', xl: '15%'}}>
+				<Flex justify="space-between">
 				<Heading size="md" mb={3} color="white">
 					Task Lists
 				</Heading>
+				{menuIsToggled ? (
+							<IconButton
+								colorScheme="whiteAlpha"
+								onClick={toggleMenu}
+								size="xs"
+								icon={<CloseIcon />}
+							/>
+						) : <IconButton variant="unstyled"/> }
+				</Flex>
 				<TaskListOverview
 					taskLists={taskLists}
 					activeList={activeList}

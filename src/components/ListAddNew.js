@@ -17,12 +17,11 @@ const ListAddNew = ({ hideInput, isOpen, onSubmit }) => {
 
 	const handleSubmit = event => {
 		event.preventDefault()
-		if(listName.trim().length > 0) {
-			onSubmit({type: 'addList', payload: listName})
+		if (listName.trim().length > 0) {
+			onSubmit({ type: 'addList', payload: listName })
 			setListName('')
 			hideInput()
-		}
-		else {
+		} else {
 			hideInput()
 		}
 	}
@@ -40,8 +39,16 @@ const ListAddNew = ({ hideInput, isOpen, onSubmit }) => {
 					placeholder="List name"
 					onChange={handleChange}
 					onBlur={handleBlur}
+					colorScheme="whiteAlpha"
+					size="sm"
+					width={{ base: '100%', md: '50%', lg: '50%'}}
 				/>
-				<Button type="submit" isDisabled={!listName} colorScheme="blue">
+				<Button
+					type="submit"
+					isDisabled={!listName}
+					colorScheme="whiteAlpha"
+					size="sm"
+					>
 					Add
 				</Button>
 			</Flex>

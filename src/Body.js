@@ -1,12 +1,19 @@
 import { useState, useEffect } from 'react'
 import { Box, Flex, IconButton, Icon, useDisclosure } from '@chakra-ui/react'
+import { HamburgerIcon } from '@chakra-ui/icons'
 import { BsKanban, BsTable } from 'react-icons/bs'
 import { DragDropContext } from 'react-beautiful-dnd'
 import ColumnAddNew from './components/ColumnAddNew'
 import BoardView from './views/BoardView'
 import TableView from './views/TableView'
 
-const Body = ({ taskListData, activeList, dispatch }) => {
+const Body = ({
+	taskListData,
+	activeList,
+	dispatch,
+	toggleMenu,
+	isSmallerThan768
+}) => {
 	const [data, setData] = useState(taskListData)
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const [view, setView] = useState('board')
@@ -18,16 +25,15 @@ const Body = ({ taskListData, activeList, dispatch }) => {
 	// creates two-way map between column titles (e.g. 'backlog') and ids
 	const [columnTitlesToIds] = useState(
 		new Map(
-			Object.values(
-				taskListData.taskLists[activeList].columns)
-					.map(column => [column.title, column.id])
-					.concat(
-						Object.values(
-							taskListData.taskLists[activeList].columns
-						).map(column => [column.id, column.title])
-					)
-			)
+			Object.values(taskListData.taskLists[activeList].columns)
+				.map(column => [column.title, column.id])
+				.concat(
+					Object.values(
+						taskListData.taskLists[activeList].columns
+					).map(column => [column.id, column.title])
+				)
 		)
+	)
 
 	const handleOnDragEnd = result => {
 		if (result.type === 'column') {
@@ -78,7 +84,7 @@ const Body = ({ taskListData, activeList, dispatch }) => {
 		dispatch(typeAndPayload)
 	}
 
-	const handleViewToggle = () => {
+	const toggleView = () => {
 		setView(prevState => (prevState === 'board' ? 'table' : 'board'))
 	}
 
@@ -133,19 +139,36 @@ const Body = ({ taskListData, activeList, dispatch }) => {
 					dispatch={dispatch}
 				/>
 				<Flex direction="column">
-					<Flex mb={5}>
+					<Flex mt={5} ml={5}>
+						{isSmallerThan768 && (
+							<IconButton
+								onClick={toggleMenu}
+								isRound={true}
+								size="xs"
+								colorScheme="purple"
+								icon={<HamburgerIcon />}
+								mr={5}
+								/>
+								)}
 						<IconButton
 							isDisabled={view === 'board'}
-							onClick={handleViewToggle}
+							isRound={true}
+							colorScheme="blackAlpha"
+							onClick={toggleView}
+							size="xs"
+							mr={1}
 							icon={<Icon as={BsKanban} />}
-						/>
+							/>
 						<IconButton
 							isDisabled={view === 'table'}
-							onClick={handleViewToggle}
+							isRound={true}
+							colorScheme="blackAlpha"
+							size="xs"
+							onClick={toggleView}
 							icon={<Icon as={BsTable} />}
 						/>
 					</Flex>
-					<Flex mt={5}>
+					<Flex>
 						{view === 'board' ? (
 							<BoardView
 								data={data.taskLists[activeList]}
