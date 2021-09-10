@@ -129,7 +129,7 @@ const Body = ({
 	}
 
 	return (
-		<Box m={0} p={0} bg="#F4F4F4">
+		<Box m={0} p={0} width="100%" bg="#F4F4F4">
 			<DragDropContext onDragEnd={handleOnDragEnd}>
 				<ColumnAddNew
 					isOpen={isOpen}
