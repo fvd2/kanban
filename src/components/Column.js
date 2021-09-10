@@ -109,7 +109,8 @@ const Column = ({
 						ref={provided.innerRef}
 						{...provided.draggableProps}
 						{...provided.dragHandleProps}
-						p={5}>
+						mt={2}
+						p={3}>
 						<Box
 							align="center"
 							bg="#FFFFFF"
@@ -132,11 +133,12 @@ const Column = ({
 										mb={1}
 										align="center"
 										lineHeight="unset"
-										size="sm">
+										size="sm"
+										isTruncated>
 										{title}
 									</Heading>
-									{optionsAreOpen && (
-										<Box>
+									{optionsAreOpen ? (
+										<Flex>
 											<IconButton
 												onClick={handleTitleSelect}
 												size="sm"
@@ -149,7 +151,11 @@ const Column = ({
 												variant="unstyled"
 												icon={<DeleteIcon />}
 											/>
-										</Box>
+										</Flex>
+									) : (
+										<Flex>
+											<IconButton size="sm" variant="unstyled"/>
+										</Flex>
 									)}
 								</Flex>
 							)}

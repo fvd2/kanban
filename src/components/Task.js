@@ -86,7 +86,6 @@ const Task = ({
 							justify="center"
 							onMouseEnter={handleOptions}
 							onMouseOver={handleOptions}
-							onMouseLeave={handleOptions}
 							bg="white"
 							mb={1}
 							pl={2}

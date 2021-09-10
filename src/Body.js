@@ -12,6 +12,7 @@ const Body = ({
 	activeList,
 	dispatch,
 	toggleMenu,
+	menuIsToggled,
 	isSmallerThan768
 }) => {
 	const [data, setData] = useState(taskListData)
@@ -129,7 +130,7 @@ const Body = ({
 	}
 
 	return (
-		<Box m={0} p={0} width="100%" bg="#F4F4F4">
+		<Box bg="#F4F4F4" minWidth="fit-content" width="100%">
 			<DragDropContext onDragEnd={handleOnDragEnd}>
 				<ColumnAddNew
 					isOpen={isOpen}
@@ -145,11 +146,13 @@ const Body = ({
 								onClick={toggleMenu}
 								isRound={true}
 								size="xs"
-								colorScheme="purple"
+								bgColor="#424874"
+								color="white"
+								_hover={{ bgColor: '#292D48' }}
 								icon={<HamburgerIcon />}
 								mr={5}
-								/>
-								)}
+							/>
+						)}
 						<IconButton
 							isDisabled={view === 'board'}
 							isRound={true}
@@ -158,7 +161,7 @@ const Body = ({
 							size="xs"
 							mr={1}
 							icon={<Icon as={BsKanban} />}
-							/>
+						/>
 						<IconButton
 							isDisabled={view === 'table'}
 							isRound={true}

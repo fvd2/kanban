@@ -41,16 +41,10 @@ const ListAddNew = ({ hideInput, isOpen, onSubmit }) => {
 					onBlur={handleBlur}
 					colorScheme="whiteAlpha"
 					size="sm"
-					width={{ base: '100%', md: '50%', lg: '50%'}}
+					ml={5}
+					mr={5}
+					mt={3}
 				/>
-				<Button
-					type="submit"
-					isDisabled={!listName}
-					colorScheme="whiteAlpha"
-					size="sm"
-					>
-					Add
-				</Button>
 			</Flex>
 		</form>
 	)

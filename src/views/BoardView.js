@@ -48,6 +48,11 @@ const BoardView = ({
 							))}
 							{provided.placeholder}
 							<IconButton
+								mt={6}
+								size="xs"
+								bgColor="#424874"
+								color="#FFFFFF"
+								_hover={{ bgColor: '#292D48'}}
 								isRound={true}
 								aria-label="Add column button"
 								icon={<AddIcon />}

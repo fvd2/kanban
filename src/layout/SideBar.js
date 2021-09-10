@@ -1,14 +1,16 @@
-import {
-	Flex,
-	Heading,
-	IconButton,
-} from '@chakra-ui/react'
+import { Flex, Heading, IconButton } from '@chakra-ui/react'
 import { DragDropContext } from 'react-beautiful-dnd'
 import { CloseIcon } from '@chakra-ui/icons'
 import TaskListOverview from '../components/TaskListOverview'
 
-const SideBar = ({ taskLists, activeList, onListSwitch, dispatch, menuIsToggled, toggleMenu }) => {
-
+const SideBar = ({
+	taskLists,
+	activeList,
+	onListSwitch,
+	dispatch,
+	menuIsToggled,
+	toggleMenu
+}) => {
 	const handleOnDragEnd = result => {
 		if (!result.destination) return
 		dispatch({
@@ -23,28 +25,39 @@ const SideBar = ({ taskLists, activeList, onListSwitch, dispatch, menuIsToggled,
 
 	console.log(menuIsToggled)
 
-
 	return (
 		<DragDropContext onDragEnd={handleOnDragEnd}>
 			<Flex
 				direction="column"
-				pt={5}
-				pl={5}
-				pr={5}
 				bg="#424874"
-				w={{ base: '100%', md: 'auto', lg: '25%', xl: '15%'}}>
+				minHeight="100vh"
+				w={{ base: '100%', md: 'auto', lg: '25%', xl: '20%' }}>
 				<Flex justify="space-between">
-				<Heading size="md" mb={3} color="white">
-					Task Lists
-				</Heading>
-				{menuIsToggled ? (
-							<IconButton
-								colorScheme="whiteAlpha"
-								onClick={toggleMenu}
-								size="xs"
-								icon={<CloseIcon />}
-							/>
-						) : <IconButton variant="unstyled"/> }
+					<Heading
+						size="md"
+						mb={3}
+						mt={5}
+						ml={5}
+						mr={5}
+						color="white">
+						Task Lists
+					</Heading>
+					{menuIsToggled ? (
+						<IconButton
+							mt={5}
+							mr={5}
+							colorScheme="whiteAlpha"
+							onClick={toggleMenu}
+							size="xs"
+							isRound={true}
+							icon={<CloseIcon />}
+						/>
+					) : (
+						<div
+							mt={5}
+							mr={5}
+						/>
+					)}
 				</Flex>
 				<TaskListOverview
 					taskLists={taskLists}

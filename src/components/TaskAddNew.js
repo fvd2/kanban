@@ -32,18 +32,14 @@ const TaskAddNew = ({ onAddTask, hideTaskInput, isOpen, columnId }) => {
 	}
 
 	return (
-		<form onSubmit={handleSubmit}>
+		<form onSubmit={handleSubmit} onBlur={handleBlur}>
 			<Flex>
 				<Input
 					ref={inputRef}
 					value={taskTitle}
 					placeholder="Your next task"
 					onChange={handleChange}
-					onBlur={handleBlur}
 				/>
-				<Button type="submit" isDisabled={!taskTitle} colorScheme="blue">
-					Add
-				</Button>
 			</Flex>
 		</form>
 	)

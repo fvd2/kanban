@@ -18,21 +18,12 @@ const TableRow = ({
 	columns
 }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure()
-	const [optionsAreOpen, setOptionsAreOpen] = useState(false)
 	const [tableViewIsOpen, setTableViewIsOpen] = useState(false)
 	const btnRef = useRef()
 
 	const toggleTaskView = () => {
 		setTableViewIsOpen(true)
 		onOpen()
-	}
-	const handleOptions = event => {
-		if (event.type === 'mouseenter' || event.type === 'mouseover') {
-			setOptionsAreOpen(true)
-		}
-		if (event.type === 'mouseleave') {
-			setOptionsAreOpen(false)
-		}
 	}
 
 	const handleDeleteTask = () => {
@@ -59,19 +50,17 @@ const TableRow = ({
 				/>
 			</Portal>}
 			<Tr
-				key={taskId}
-				onMouseEnter={handleOptions}
-				onMouseOver={handleOptions}
-				onMouseLeave={handleOptions}>
+				key={taskId}>
 				<Td>{columnTitle}</Td>
 				<Td>{taskTitle}</Td>
 				<Td>{taskOwner}</Td>
 				<Td><Circle
 					size="20px"
-					border="2px solid black"
+					align="center"
+					justify="center"
+					border="1px solid black"
 					m={0.5}
 					bg={taskColor}/></Td>
-				{optionsAreOpen ? (
 					<Td>
 						<IconButton
 							size="xs"
@@ -86,12 +75,6 @@ const TableRow = ({
 							onClick={handleDeleteTask}
 						/>
 					</Td>
-				) : (
-					<Td>
-						<IconButton size="xs" variant="unstyled" />
-						<IconButton size="xs" variant="unstyled" />
-					</Td>
-				)}
 			</Tr>
 		</>
 	)

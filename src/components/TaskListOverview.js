@@ -40,13 +40,24 @@ const TaskListOverview = ({
 							/>
 						)
 					})}
-							{provided.placeholder}
+					{provided.placeholder}
 					{!isOpen ? (
-						<Text size="md" color="white" onClick={toggleAddList}>
+						<Text
+							pt={3}
+							pb={3}
+							pl={5}
+							pr={5}
+							size="md"
+							color="white"
+							onClick={toggleAddList}>
 							+ Add List
 						</Text>
 					) : (
 						<ListAddNew
+							pt={3}
+							pb={3}
+							pl={5}
+							pr={5}
 							onSubmit={handleList}
 							hideInput={toggleAddList}
 							isOpen={isOpen}

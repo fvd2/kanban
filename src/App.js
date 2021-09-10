@@ -287,7 +287,7 @@ const App = () => {
 
 	return (
 		<>
-			<Flex direction={{ base: 'column', md: 'row' }} height="100vh" width="100vw">
+			<Flex direction={{ base: 'column', md: 'row' }}>
 				{(!isSmallerThan768 || menuIsToggled) && <SideBar
 					taskLists={appData.listOrder}
 					activeList={appData.activeList}
