@@ -94,6 +94,7 @@ const TableView = ({
 						columns={Object.values(data.columns).map(
 							column => column.title
 						)}
+						columnId={Object.values(data.columns)[0].id}
 						columnTitlesToIds={columnTitlesToIds}
 					/>
 				)}

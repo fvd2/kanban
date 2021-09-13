@@ -35,20 +35,21 @@ const TaskView = ({
 	columnTitlesToIds
 }) => {
 	const [selectedColor, setSelectedColor] = useState(color)
-	const [selectedColumn, setSelectedColumn] = useState(
-		columnTitlesToIds.get(columnId)
-	)
+	const [selectedColumn, setSelectedColumn] = useState('')
 	const availableColors = [1, 2, 3, 4, 5, 6]
 
 	const columnRef = useRef(columnTitlesToIds.get(columnId))
 
-	// prevent Drawer state update after saving task changes 
+	// prevent Drawer state update after saving task changes
 	useEffect(() => {
 		let contentIsShown = true
 		if (contentIsShown === false) {
 			onClose()
 		}
-		return () => { contentIsShown = false }
+		return () => {
+			contentIsShown = false
+			setSelectedColumn(columnTitlesToIds.get(columnId))
+		}
 	})
 
 	const handleColumnChange = () => {
@@ -105,19 +106,19 @@ const TaskView = ({
 						return errors
 					}}
 					onSubmit={(values, { setSubmitting }) => {
-							taskHandler({
-								taskId: id,
-								title: values.title,
-								owner: values.owner,
-								color: selectedColor,
-								sourceColumn: columnId,
-								columnId: columnTitlesToIds.get(selectedColumn),
-								destinationColumn:
-									columnTitlesToIds.get(selectedColumn),
-								index: index
-							})
-							setSubmitting(false)
-							onClose()
+						taskHandler({
+							taskId: id,
+							title: values.title,
+							owner: values.owner,
+							color: selectedColor,
+							sourceColumn: columnId,
+							columnId: columnTitlesToIds.get(selectedColumn),
+							destinationColumn:
+								columnTitlesToIds.get(selectedColumn),
+							index: index
+						})
+						setSubmitting(false)
+						onClose()
 					}}>
 					{({ errors, touched, isSubmitting }) => (
 						<Form>

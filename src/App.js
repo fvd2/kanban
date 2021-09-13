@@ -101,10 +101,10 @@ const reducer = (state, action) => {
 					[action.payload.activeList]: {
 						columns: {
 							$merge: {
-								[action.payload.columnName]: newColumn
+								[newColumn.id]: newColumn
 							}
 						},
-						columnOrder: { $push: [action.payload.columnName] }
+						columnOrder: { $push: [newColumn.id] }
 					}
 				}
 			})
@@ -172,15 +172,14 @@ const reducer = (state, action) => {
 				title: action.payload.title,
 				color: action.payload.color,
 				owner: action.payload.owner,
-				columnId: action.payload.columnId
 			}
-
+			console.log(state)
 			return update(state, {
 				taskLists: {
 					[state.activeList]: {
 						tasks: { $merge: { [newDetailedTask.id]: newDetailedTask } },
 						columns: {
-							[newDetailedTask.columnId]: {
+							[action.payload.columnId]: {
 								taskIds: { $push: [newDetailedTask.id] }
 							}
 						}

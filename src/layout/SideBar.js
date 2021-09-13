@@ -23,8 +23,6 @@ const SideBar = ({
 		})
 	}
 
-	console.log(menuIsToggled)
-
 	return (
 		<DragDropContext onDragEnd={handleOnDragEnd}>
 			<Flex

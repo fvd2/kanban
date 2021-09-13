@@ -12,7 +12,6 @@ const Body = ({
 	activeList,
 	dispatch,
 	toggleMenu,
-	menuIsToggled,
 	isSmallerThan768
 }) => {
 	const [data, setData] = useState(taskListData)
@@ -21,10 +20,23 @@ const Body = ({
 
 	useEffect(() => {
 		setData(taskListData)
+		const createTwoWayMap = (taskListData, activeList) => {
+			return new Map(
+				Object.values(taskListData.taskLists[activeList].columns)
+					.map(column => [column.title, column.id])
+					.concat(
+						Object.values(
+							taskListData.taskLists[activeList].columns
+						).map(column => [column.id, column.title])
+					)
+			)
+		}
+		setColumnTitlesToIds(createTwoWayMap(taskListData, taskListData.activeList))
 	}, [taskListData])
 
+
 	// creates two-way map between column titles (e.g. 'backlog') and ids
-	const [columnTitlesToIds] = useState(
+	const [columnTitlesToIds, setColumnTitlesToIds] = useState(
 		new Map(
 			Object.values(taskListData.taskLists[activeList].columns)
 				.map(column => [column.title, column.id])
@@ -128,7 +140,7 @@ const Body = ({
 			payload: { columnId, title, color, owner }
 		})
 	}
-
+	
 	return (
 		<Box bg="#F4F4F4" minWidth="fit-content" width="100%">
 			<DragDropContext onDragEnd={handleOnDragEnd}>

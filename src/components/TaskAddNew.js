@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { Button, Flex, Input } from '@chakra-ui/react'
+import { Flex, Input } from '@chakra-ui/react'
 
 const TaskAddNew = ({ onAddTask, hideTaskInput, isOpen, columnId }) => {
 	const [taskTitle, setTaskTitle] = useState('')

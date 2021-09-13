@@ -7,8 +7,7 @@ import {
 	Flex,
 	IconButton,
 	Input,
-	Text,
-	Tooltip
+	Text
 } from '@chakra-ui/react'
 import { DeleteIcon, EditIcon } from '@chakra-ui/icons'
 
@@ -98,7 +97,8 @@ const TaskListItem = ({
 					{isEditing ? (
 						editListField
 					) : (
-						<Flex width="100%"
+						<Flex
+							width="100%"
 							justify="space-between"
 							flexGrow={1}
 							key={listName}
@@ -115,7 +115,9 @@ const TaskListItem = ({
 								aria-label="Task list selector"
 								color="white"
 								onClick={onListSwitch}
-								{...listName.length > 20 && {isTruncated: true}}>
+								{...(listName.length > 20 && {
+									isTruncated: true
+								})}>
 								{listName}
 							</Text>
 							<Box width={75} mr={1}>
