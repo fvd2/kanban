@@ -21,12 +21,12 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v2
-      - name: Add known hosts 
-        run: ssh-keyscan -H -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts  
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
         with: 
          key: ${{ secrets.SSH_PRIVATE_KEY }}
-         known_hosts: ~/.ssh/known_hosts
+         known_hosts: 'placeholder' 
+      - name: Add known hosts 
+        run: ssh-keyscan -H -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts  
       - name: Deploy using rsync
         run: rsync -avzn -e 'ssh -p ${{ secrets.SSH_PORT }}' ./build/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/kanban
