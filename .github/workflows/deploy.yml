@@ -28,5 +28,7 @@ jobs:
          known_hosts: ssh-keyscan -H -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts  
       - name: Deploy using rsync
         run: rsync -avzn -e 'ssh -p ${{ secrets.SSH_PORT }}' ./build/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/kanban
-      - name: paste known_hosts data to verify its contents 
-        run: cat ~/.ssh/known_hosts
+      - name: get known_hosts content 
+        run: echo ::set-output name=known_hosts::$(cat ~/.ssh/known_hosts)
+      - name: test output 
+        run: echo ${{ steps.vars.outputs.known_hosts }}
