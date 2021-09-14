@@ -1,0 +1,33 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Deploy to VPS via SSH
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with: 
+         key: ${{ secrets.SSH_PRIVATE_KEY }}
+         known_hosts: ssh-keyscan -H -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts  
+      - name: Deploy using rsync
+        run: rsync -avzn -e 'ssh -p ${{ secrets.SSH_PORT }}' ./build/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/kanban
+      - name: paste known_hosts data to verify its contents 
+        run: echo ~/.ssh/known_hosts
