@@ -36,7 +36,7 @@ const Task = ({
 	columnTitlesToIds
 }) => {
 	const [optionsAreOpen, setOptionsAreOpen] = useState(false)
-	const { isOpen, onOpen, onClose } = useDisclosure()
+	const { isOpen, onOpen, onClose: onCloseTaskView } = useDisclosure()
 	const btnRef = useRef()
 	const handleColorChange = (colorId, onClosePopover) => {
 		onColorChange(id, colors.tasks[colorId])
@@ -86,6 +86,8 @@ const Task = ({
 							justify="center"
 							onMouseEnter={handleOptions}
 							onMouseOver={handleOptions}
+							onFocus={handleOptions}
+							onMouseLeave={handleOptions}
 							bg="white"
 							mb={1}
 							pl={2}
@@ -101,7 +103,7 @@ const Task = ({
 							{...provided.dragHandleProps}>
 							<Flex align="center">
 								<Popover>
-									{({ onClosePopover }) => (
+									{({ onClose }) => (
 										<>
 											<PopoverTrigger>
 												<Circle
@@ -116,7 +118,7 @@ const Task = ({
 													width="auto"
 													p={1}>
 													<Flex>
-														{colorButtons(onClosePopover)}
+														{colorButtons(onClose)}
 													</Flex>
 												</PopoverContent>
 											</Portal>
@@ -140,7 +142,7 @@ const Task = ({
 									<TaskView
 										btnRef={btnRef}
 										isOpen={isOpen}
-										onClose={onClose}
+										onClose={onCloseTaskView}
 										heading="Edit task"
 										id={id}
 										title={title}

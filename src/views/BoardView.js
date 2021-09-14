@@ -49,6 +49,7 @@ const BoardView = ({
 							{provided.placeholder}
 							<IconButton
 								mt={6}
+								{...data.columnOrder.length < 1 ? {marginLeft: 5 } : ''}
 								size="xs"
 								bgColor="#424874"
 								color="#FFFFFF"

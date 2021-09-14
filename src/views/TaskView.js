@@ -35,27 +35,20 @@ const TaskView = ({
 	columnTitlesToIds
 }) => {
 	const [selectedColor, setSelectedColor] = useState(color)
-	const [selectedColumn, setSelectedColumn] = useState('')
+	const [selectedColumn, setSelectedColumn] = useState(columnTitlesToIds.get(columnId))
 	const availableColors = [1, 2, 3, 4, 5, 6]
 
-	const columnRef = useRef(columnTitlesToIds.get(columnId))
-
-	// prevent Drawer state update after saving task changes
 	useEffect(() => {
-		let contentIsShown = true
-		if (contentIsShown === false) {
+		return () => {
 			onClose()
 		}
-		return () => {
-			contentIsShown = false
-			setSelectedColumn(columnTitlesToIds.get(columnId))
-		}
-	})
+	},[onClose])
 
+	const columnRef = useRef(columnTitlesToIds.get(columnId))
 	const handleColumnChange = () => {
 		setSelectedColumn(columnRef.current.value)
 	}
-
+	
 	const colorButtons = availableColors.map(colorId => {
 		if (selectedColor === colors.tasks[colorId].trim()) {
 			return (

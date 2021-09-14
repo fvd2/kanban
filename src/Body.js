@@ -18,9 +18,17 @@ const Body = ({
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const [view, setView] = useState('board')
 
+	const [columnTitlesToIds, setColumnTitlesToIds] = useState(createTwoWayMap(taskListData, taskListData.activeList))
+
 	useEffect(() => {
 		setData(taskListData)
-		const createTwoWayMap = (taskListData, activeList) => {
+		setColumnTitlesToIds(
+			createTwoWayMap(taskListData, taskListData.activeList)
+		)
+	}, [taskListData])
+
+	function createTwoWayMap(taskListData, activeList) {
+		if (taskListData.taskLists[activeList].columns)
 			return new Map(
 				Object.values(taskListData.taskLists[activeList].columns)
 					.map(column => [column.title, column.id])
@@ -30,23 +38,8 @@ const Body = ({
 						).map(column => [column.id, column.title])
 					)
 			)
-		}
-		setColumnTitlesToIds(createTwoWayMap(taskListData, taskListData.activeList))
-	}, [taskListData])
-
-
-	// creates two-way map between column titles (e.g. 'backlog') and ids
-	const [columnTitlesToIds, setColumnTitlesToIds] = useState(
-		new Map(
-			Object.values(taskListData.taskLists[activeList].columns)
-				.map(column => [column.title, column.id])
-				.concat(
-					Object.values(
-						taskListData.taskLists[activeList].columns
-					).map(column => [column.id, column.title])
-				)
-		)
-	)
+		else return new Map()
+	}
 
 	const handleOnDragEnd = result => {
 		if (result.type === 'column') {
@@ -140,7 +133,7 @@ const Body = ({
 			payload: { columnId, title, color, owner }
 		})
 	}
-	
+
 	return (
 		<Box bg="#F4F4F4" minWidth="fit-content" width="100%">
 			<DragDropContext onDragEnd={handleOnDragEnd}>

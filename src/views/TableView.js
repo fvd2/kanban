@@ -57,7 +57,7 @@ const TableView = ({
 						</Tr>
 					</Thead>
 					<Tbody>
-						{Object.values(data.columns).map(column =>
+						{data && Object.values(data.columns).map(column =>
 							column.taskIds.map((task, index) => (
 								<TableRow
 									key={data.tasks[task].id}

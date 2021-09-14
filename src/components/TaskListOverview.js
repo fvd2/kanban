@@ -49,7 +49,8 @@ const TaskListOverview = ({
 							pr={5}
 							size="md"
 							color="white"
-							onClick={toggleAddList}>
+							onClick={toggleAddList}
+							>
 							+ Add List
 						</Text>
 					) : (
