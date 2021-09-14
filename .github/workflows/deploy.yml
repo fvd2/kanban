@@ -29,4 +29,4 @@ jobs:
       - name: Deploy using rsync
         run: rsync -avzn -e 'ssh -p ${{ secrets.SSH_PORT }}' ./build/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/kanban
       - name: paste known_hosts data to verify its contents 
-        run: echo ~/.ssh/known_hosts
+        run: cat ~/.ssh/known_hosts
