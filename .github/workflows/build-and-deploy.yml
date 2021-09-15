@@ -25,10 +25,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: yarn install --frozen-lockfile
-    - name: build application 
-      run: yarn build
-      env: 
-        PUBLIC_URL: /kanban 
+    - run: yarn build
     - name: Install SSH Key
       uses: shimataro/ssh-key-action@v2
       with: 
