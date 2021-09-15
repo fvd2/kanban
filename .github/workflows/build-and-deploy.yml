@@ -30,7 +30,6 @@ jobs:
     - name: archive build files
       uses: actions/upload-artifact@v2
       with:
-        name: buildFolder
         path: build
         
   deploy:
@@ -47,8 +46,5 @@ jobs:
         run: ssh-keyscan -H -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
       - name: download build folder
         uses: actions/download-artifact@v2
-        with: 
-          name: buildFolder
-          path: build
       - name: Deploy using rsync
-        run: rsync -avz -e 'ssh -p ${{ secrets.SSH_PORT }}' buildFolder ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/kanban
+        run: rsync -avz -e 'ssh -p ${{ secrets.SSH_PORT }}' ./build/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/kanban
