@@ -27,7 +27,11 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: yarn install --frozen-lockfile
     - run: yarn build
-
+    - name: archive build files
+      uses: actions/upload-artifact@v2
+      with:
+        name: buildFolder
+        
   deploy:
     runs-on: ubuntu-latest
     needs: build
@@ -39,6 +43,10 @@ jobs:
          key: ${{ secrets.SSH_PRIVATE_KEY }}
          known_hosts: 'placeholder' 
       - name: Add known hosts 
-        run: ssh-keyscan -H -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts  
+        run: ssh-keyscan -H -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+      - name: download build folder
+        uses: actions/download-artifact@v2
+        with: 
+          name: buildFolder
       - name: Deploy using rsync
-        run: rsync -avzn -e 'ssh -p ${{ secrets.SSH_PORT }}' ./build/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/kanban
+        run: rsync -avz -e 'ssh -p ${{ secrets.SSH_PORT }}' buildFolder ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/kanban
