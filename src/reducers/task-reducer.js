@@ -47,7 +47,7 @@ const TaskReducer = (state, action) => {
 					taskList => taskList !== action.payload.listName
 				)
 				updatedState = update(state, {
-					activeList: { $set: newActiveList ? newActiveList: '' },
+					activeList: { $set: newActiveList ? newActiveList : '' },
 					taskLists: { $unset: [action.payload.listName] },
 					listOrder: { $splice: [[indexToDelete, 1]] }
 				})
@@ -95,12 +95,15 @@ const TaskReducer = (state, action) => {
 			updateFirebase(updatedState)
 			return updatedState
 		case 'selectList':
-			updatedState = update(state, {
-				activeList: { $set: action.payload.selectedList }
-			})
-			updateFirebase(updatedState)
-			return updatedState
-
+			if (state.activeList !== action.payload.selectedList) {
+				updatedState = update(state, {
+					activeList: { $set: action.payload.selectedList }
+				})
+				updateFirebase(updatedState)
+				return updatedState
+			} else {
+				return state
+			}
 		case 'moveList':
 			// not using immutability-helper splice due to expected flickering issue (see moveColumn)
 			stateCopy.listOrder.splice(action.payload.sourceIndex, 1)
