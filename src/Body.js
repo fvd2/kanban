@@ -1,5 +1,11 @@
 import { useState, useEffect } from 'react'
-import { Box, Flex, IconButton, Icon, useDisclosure } from '@chakra-ui/react'
+import {
+	Box,
+	Flex,
+	IconButton,
+	Icon,
+	useDisclosure
+} from '@chakra-ui/react'
 import { HamburgerIcon } from '@chakra-ui/icons'
 import { BsKanban, BsTable } from 'react-icons/bs'
 import { DragDropContext } from 'react-beautiful-dnd'
@@ -19,7 +25,9 @@ const Body = ({
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const [view, setView] = useState('board')
 
-	const [columnTitlesToIds, setColumnTitlesToIds] = useState(createTwoWayMap(taskListData, taskListData.activeList))
+	const [columnTitlesToIds, setColumnTitlesToIds] = useState(
+		createTwoWayMap(taskListData, taskListData.activeList)
+	)
 
 	useEffect(() => {
 		setData(taskListData)
@@ -82,11 +90,17 @@ const Body = ({
 	}
 
 	const handleDeleteTask = (columnId, taskId, index) => {
-		dispatch({ type: 'deleteTask', payload: { userId, columnId, taskId, index } })
+		dispatch({
+			type: 'deleteTask',
+			payload: { userId, columnId, taskId, index }
+		})
 	}
 
 	const handleColumnTitleChange = (columnId, columnName) => {
-		dispatch({ type: 'renameColumn', payload: { userId, columnId, columnName } })
+		dispatch({
+			type: 'renameColumn',
+			payload: { userId, columnId, columnName }
+		})
 	}
 
 	const handleDeleteColumn = (columnId, index) => {
