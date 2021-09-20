@@ -56,10 +56,7 @@ const Column = ({
 	}
 
 	const handleDelete = () => {
-		onDeleteColumn({
-			type: 'deleteColumn',
-			payload: { columnId: id, index }
-		})
+		onDeleteColumn({columnId: id, index })
 	}
 
 	const toggleAddTask = () => {

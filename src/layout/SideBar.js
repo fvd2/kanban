@@ -1,9 +1,20 @@
-import { Flex, Heading, IconButton } from '@chakra-ui/react'
+import {
+	Avatar,
+	Button,
+	Flex,
+	Heading,
+	IconButton,
+	Text
+} from '@chakra-ui/react'
 import { DragDropContext } from 'react-beautiful-dnd'
 import { CloseIcon } from '@chakra-ui/icons'
 import TaskListOverview from '../components/TaskListOverview'
+import { useContext, useState } from 'react'
+import { AuthContext } from '../context/auth-context'
 
 const SideBar = ({
+	userId,
+	onSignOut,
 	taskLists,
 	activeList,
 	onListSwitch,
@@ -11,17 +22,32 @@ const SideBar = ({
 	menuIsToggled,
 	toggleMenu
 }) => {
+	const [signOutButtonIsOpen, setSignOutButtonIsOpen] = useState(false)
+	const userContext = useContext(AuthContext)
+
 	const handleOnDragEnd = result => {
 		if (!result.destination) return
 		dispatch({
 			type: 'moveList',
 			payload: {
+				userId,
 				sourceIndex: result.source.index,
 				destinationIndex: result.destination.index,
 				draggableId: result.draggableId
 			}
 		})
 	}
+
+	const toggleSignOutButton = (event) => {
+		if (event.type === 'mouseenter') {
+			setSignOutButtonIsOpen(true)
+		}
+		if (event.type === 'mouseleave') {
+			setSignOutButtonIsOpen(false)
+		}
+	}
+
+	const emailPrefix = userContext.email ? userContext.email.split('@')[0] : 'Guest'
 
 	return (
 		<DragDropContext onDragEnd={handleOnDragEnd}>
@@ -30,7 +56,26 @@ const SideBar = ({
 				bg="#424874"
 				minHeight="100vh"
 				w={{ base: '100%', md: 'auto', lg: '25%', xl: '20%' }}>
-				<Flex justify="space-between">
+				<Flex
+					mt={3}
+					ml={5}
+					align="center"
+					onMouseEnter={toggleSignOutButton}
+					onMouseLeave={toggleSignOutButton}>
+					{signOutButtonIsOpen ? (
+						<Button onClick={onSignOut} size="xs">
+							SignOut
+						</Button>
+					) : (
+						<>
+							<Avatar size="xs" color="#FFFFFF" mr={2} />
+							<Text color="#FFFFFF" isTruncated>
+								{emailPrefix}
+							</Text>
+						</>
+					)}
+				</Flex>
+				<Flex>
 					<Heading
 						size="md"
 						mb={3}
@@ -51,16 +96,14 @@ const SideBar = ({
 							icon={<CloseIcon />}
 						/>
 					) : (
-						<div
-							mt={5}
-							mr={5}
-						/>
+						<div mt={5} mr={5} />
 					)}
 				</Flex>
 				<TaskListOverview
 					taskLists={taskLists}
 					activeList={activeList}
 					dispatch={dispatch}
+					userId={userContext.userId}
 					onListSwitch={onListSwitch}
 				/>
 			</Flex>

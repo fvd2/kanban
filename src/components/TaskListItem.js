@@ -39,7 +39,7 @@ const TaskListItem = ({
 	}
 
 	const handleDelete = () => {
-		onDelete({ type: 'deleteList', payload: listName })
+		onDelete(listName)
 	}
 
 	const handleEdit = () => {
@@ -57,10 +57,7 @@ const TaskListItem = ({
 				return errors
 			}}
 			onSubmit={values => {
-				onListSubmit({
-					type: 'renameList',
-					payload: { listName, newName: values.listName }
-				})
+				onListSubmit(listName, values.listName)
 			}}>
 			{({ handleSubmit, errors }) => (
 				<Form>

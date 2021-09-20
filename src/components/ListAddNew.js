@@ -18,7 +18,7 @@ const ListAddNew = ({ hideInput, isOpen, onSubmit }) => {
 	const handleSubmit = event => {
 		event.preventDefault()
 		if (listName.trim().length > 0) {
-			onSubmit({ type: 'addList', payload: listName })
+			onSubmit(listName)
 			setListName('')
 			hideInput()
 		} else {

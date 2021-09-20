@@ -9,6 +9,7 @@ import TableView from './views/TableView'
 
 const Body = ({
 	taskListData,
+	userId,
 	activeList,
 	dispatch,
 	toggleMenu,
@@ -57,6 +58,7 @@ const Body = ({
 			dispatch({
 				type: 'moveTask',
 				payload: {
+					userId,
 					sourceColumn: result.source.droppableId,
 					sourceIndex: result.source.index,
 					destinationColumn: result.destination.droppableId,
@@ -71,6 +73,7 @@ const Body = ({
 		dispatch({
 			type: 'addTask',
 			payload: {
+				userId,
 				activeList,
 				taskTitle,
 				columnId
@@ -79,15 +82,18 @@ const Body = ({
 	}
 
 	const handleDeleteTask = (columnId, taskId, index) => {
-		dispatch({ type: 'deleteTask', payload: { columnId, taskId, index } })
+		dispatch({ type: 'deleteTask', payload: { userId, columnId, taskId, index } })
 	}
 
 	const handleColumnTitleChange = (columnId, columnName) => {
-		dispatch({ type: 'renameColumn', payload: { columnId, columnName } })
+		dispatch({ type: 'renameColumn', payload: { userId, columnId, columnName } })
 	}
 
-	const handleDeleteColumn = typeAndPayload => {
-		dispatch(typeAndPayload)
+	const handleDeleteColumn = (columnId, index) => {
+		dispatch({
+			type: 'deleteColumn',
+			payload: { userId, columnId, index }
+		})
 	}
 
 	const toggleView = () => {
@@ -98,7 +104,7 @@ const Body = ({
 		// activeList added here, not prop drilled to Task component
 		dispatch({
 			type: 'changeTaskColor',
-			payload: { activeList, taskId, color }
+			payload: { userId, activeList, taskId, color }
 		})
 	}
 
@@ -115,6 +121,7 @@ const Body = ({
 		dispatch({
 			type: 'editTask',
 			payload: {
+				userId,
 				columnId,
 				taskId,
 				title,
@@ -130,7 +137,7 @@ const Body = ({
 	const handleNewDetailedTask = ({ title, color, owner, columnId }) => {
 		dispatch({
 			type: 'addDetailedTask',
-			payload: { columnId, title, color, owner }
+			payload: { userId, columnId, title, color, owner }
 		})
 	}
 
@@ -143,6 +150,7 @@ const Body = ({
 					onClose={onClose}
 					activeList={taskListData.activeList}
 					dispatch={dispatch}
+					userId={userId}
 				/>
 				<Flex direction="column">
 					<Flex mt={5} ml={5}>

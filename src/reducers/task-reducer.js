@@ -1,29 +1,27 @@
 import { v4 as uuidv4 } from 'uuid'
 import update from 'immutability-helper'
 import { doc, setDoc } from 'firebase/firestore'
-import { db } from '../index'
+import { db } from '../services/firebase'
 
-const fakeUserId = 'userId'
-
-const updateFirebase = async updatedState => {
-	try {
-		await setDoc(doc(db, fakeUserId, 'taskListData'), updatedState)
-	} catch (err) {
-		console.error(`Error updating document: ${err}`)
+const TaskReducer = (state, action) => {
+	let userId = action.payload.userId
+	const updateFirebase = async updatedState => {
+		try {
+			await setDoc(doc(db, userId, 'taskListData'), updatedState)
+		} catch (err) {
+			console.error(`Error updating document: ${err}`)
+		}
 	}
-}
-
-const taskReducer = (state, action) => {
 	let updatedState
 	let stateCopy = { ...state }
 	switch (action.type) {
 		case 'loadData':
-			return action.payload
+			return action.payload.userData
 		// list-level actions
 		case 'addList':
 			const newListObj = {
-				[action.payload]: {
-					name: action.payload,
+				[action.payload.listName]: {
+					name: action.payload.listName,
 					tasks: {},
 					columns: {},
 					columnOrder: []
@@ -32,8 +30,8 @@ const taskReducer = (state, action) => {
 
 			updatedState = update(state, {
 				taskLists: { $merge: newListObj },
-				listOrder: { $push: [action.payload] },
-				activeList: { $set: action.payload }
+				listOrder: { $push: [action.payload.listName] },
+				activeList: { $set: action.payload.listName }
 			})
 
 			updateFirebase(updatedState)
@@ -42,22 +40,23 @@ const taskReducer = (state, action) => {
 
 		case 'deleteList':
 			const indexToDelete = state.listOrder.findIndex(
-				taskList => taskList === action.payload
+				taskList => taskList === action.payload.listName
 			)
-			if (state.activeList === action.payload) {
+			if (state.activeList === action.payload.listName) {
 				const newActiveList = state.listOrder.find(
-					taskList => taskList !== action.payload
+					taskList => taskList !== action.payload.listName
 				)
 				updatedState = update(state, {
-					activeList: { $set: newActiveList },
-					taskLists: { $unset: [action.payload] },
+					activeList: { $set: newActiveList ? newActiveList: '' },
+					taskLists: { $unset: [action.payload.listName] },
 					listOrder: { $splice: [[indexToDelete, 1]] }
 				})
 				updateFirebase(updatedState)
 				return updatedState
 			} else {
 				updatedState = update(state, {
-					taskLists: { $unset: [action.payload] },
+					activeList: { $set: '' },
+					taskLists: { $unset: [action.payload.listName] },
 					listOrder: { $splice: [[indexToDelete, 1]] }
 				})
 				updateFirebase(updatedState)
@@ -329,4 +328,4 @@ const taskReducer = (state, action) => {
 	}
 }
 
-export default taskReducer
+export default TaskReducer

@@ -5,6 +5,7 @@ import TaskListItem from './TaskListItem'
 import { Droppable } from 'react-beautiful-dnd'
 
 const TaskListOverview = ({
+	userId,
 	taskLists,
 	activeList,
 	onListSwitch,
@@ -15,8 +16,16 @@ const TaskListOverview = ({
 		setIsOpen(prevState => !prevState)
 	}
 
-	const handleList = typeAndPayload => {
-		dispatch(typeAndPayload)
+	const handleDeleteList = listName => {
+		dispatch({ type: 'deleteList', payload: { userId, listName } })
+	}
+
+	const handleSubmitList = (listName, newName) => {
+		dispatch({ type: 'renameList', payload: { userId, listName, newName }})
+	}
+
+	const handleNewList = listName => {
+		dispatch({ type: 'addList', payload: { userId, listName }})
 	}
 
 	return (
@@ -33,8 +42,8 @@ const TaskListOverview = ({
 								id={listName}
 								index={index}
 								listName={listName}
-								onDelete={handleList}
-								onListSubmit={handleList}
+								onDelete={handleDeleteList}
+								onListSubmit={handleSubmitList}
 								activeList={activeList}
 								onListSwitch={onListSwitch}
 							/>
@@ -49,8 +58,7 @@ const TaskListOverview = ({
 							pr={5}
 							size="md"
 							color="white"
-							onClick={toggleAddList}
-							>
+							onClick={toggleAddList}>
 							+ Add List
 						</Text>
 					) : (
@@ -59,7 +67,7 @@ const TaskListOverview = ({
 							pb={3}
 							pl={5}
 							pr={5}
-							onSubmit={handleList}
+							onSubmit={handleNewList}
 							hideInput={toggleAddList}
 							isOpen={isOpen}
 						/>
