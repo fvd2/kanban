@@ -150,7 +150,7 @@ const TaskReducer = (state, action) => {
 				0,
 				action.payload.draggableId
 			)
-			updatedState = stateCopy
+			updatedState = { ...stateCopy }
 			updateFirebase(updatedState)
 			return updatedState
 
@@ -170,11 +170,14 @@ const TaskReducer = (state, action) => {
 			return updatedState
 		case 'deleteColumn':
 			// find indices of tasks in order to delete them
-			const columnTasks = state.taskLists[state.activeList].columns[action.payload.columnId].taskIds
+			const columnTasks =
+				state.taskLists[state.activeList].columns[
+					action.payload.columnId
+				].taskIds
 			updatedState = update(state, {
 				taskLists: {
 					[state.activeList]: {
-						tasks: { 
+						tasks: {
 							$unset: columnTasks
 						},
 						columns: {

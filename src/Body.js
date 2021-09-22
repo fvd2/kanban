@@ -55,6 +55,7 @@ const Body = ({
 			dispatch({
 				type: 'moveColumn',
 				payload: {
+					userId,
 					sourceIndex: result.source.index,
 					destinationIndex: result.destination.index,
 					draggableId: result.draggableId
