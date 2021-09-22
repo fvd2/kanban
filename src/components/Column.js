@@ -56,7 +56,7 @@ const Column = ({
 	}
 
 	const handleDelete = () => {
-		onDeleteColumn({columnId: id, index })
+		onDeleteColumn(id, index)
 	}
 
 	const toggleAddTask = () => {

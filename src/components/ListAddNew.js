@@ -1,15 +1,13 @@
 import { useState, useRef, useEffect } from 'react'
 import { Flex, Input } from '@chakra-ui/react'
 
-const ListAddNew = ({ hideInput, isOpen, onSubmit }) => {
+const ListAddNew = ({ hideInput, onSubmit }) => {
 	const [listName, setListName] = useState('')
 	const inputRef = useRef()
 
 	useEffect(() => {
-		if (isOpen) {
-			inputRef.current.focus()
-		}
-	}, [isOpen])
+		inputRef.current.focus()
+	}, [])
 
 	const handleChange = event => {
 		setListName(event.target.value)
@@ -20,13 +18,12 @@ const ListAddNew = ({ hideInput, isOpen, onSubmit }) => {
 		if (listName.trim().length > 0) {
 			onSubmit(listName)
 			setListName('')
-			hideInput()
-		} else {
-			hideInput()
 		}
+		hideInput()
 	}
 
-	const handleBlur = () => {
+	const handleBlur = (event) => {
+		event.preventDefault() 
 		hideInput()
 	}
 

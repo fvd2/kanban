@@ -95,6 +95,7 @@ const TaskReducer = (state, action) => {
 			updateFirebase(updatedState)
 			return updatedState
 		case 'selectList':
+			console.log(state)
 			if (state.activeList !== action.payload.selectedList) {
 				updatedState = update(state, {
 					activeList: { $set: action.payload.selectedList }
@@ -168,9 +169,14 @@ const TaskReducer = (state, action) => {
 			updateFirebase(updatedState)
 			return updatedState
 		case 'deleteColumn':
+			// find indices of tasks in order to delete them
+			const columnTasks = state.taskLists[state.activeList].columns[action.payload.columnId].taskIds
 			updatedState = update(state, {
 				taskLists: {
 					[state.activeList]: {
+						tasks: { 
+							$unset: columnTasks
+						},
 						columns: {
 							$unset: [action.payload.columnId]
 						},

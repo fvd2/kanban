@@ -63,7 +63,7 @@ const App = () => {
 	const handleListSwitch = event => {
 		dispatch({
 			type: 'selectList',
-			payload: { selectedList: event.target.innerText }
+			payload: { userId: userContext.userId, selectedList: event.target.innerText }
 		})
 	}
 

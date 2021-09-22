@@ -12,6 +12,7 @@ const TaskListOverview = ({
 	dispatch
 }) => {
 	const [isOpen, setIsOpen] = useState(false)
+
 	const toggleAddList = () => {
 		setIsOpen(prevState => !prevState)
 	}
@@ -69,7 +70,6 @@ const TaskListOverview = ({
 							pr={5}
 							onSubmit={handleNewList}
 							hideInput={toggleAddList}
-							isOpen={isOpen}
 						/>
 					)}
 				</Flex>
