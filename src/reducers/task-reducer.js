@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid'
 import update from 'immutability-helper'
 import { doc, setDoc } from 'firebase/firestore'
 import { db } from '../services/firebase'
+import { DUMMY_DATA } from '../dummy_data'
 
 const TaskReducer = (state, action) => {
 	let userId = action.payload.userId
@@ -17,6 +18,11 @@ const TaskReducer = (state, action) => {
 	switch (action.type) {
 		case 'loadData':
 			return action.payload.userData
+
+		case 'prePopulateApp': 
+			updatedState = DUMMY_DATA
+			updateFirebase(updatedState)
+			return updatedState
 		// list-level actions
 		case 'addList':
 			const newListObj = {
@@ -95,7 +101,6 @@ const TaskReducer = (state, action) => {
 			updateFirebase(updatedState)
 			return updatedState
 		case 'selectList':
-			console.log(state)
 			if (state.activeList !== action.payload.selectedList) {
 				updatedState = update(state, {
 					activeList: { $set: action.payload.selectedList }

@@ -156,6 +156,8 @@ const Body = ({
 		})
 	}
 
+
+
 	return (
 		<Box bg="#F4F4F4" minWidth="fit-content" width="100%">
 			<DragDropContext onDragEnd={handleOnDragEnd}>
