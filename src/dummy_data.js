@@ -2,7 +2,7 @@ import { colors } from './theme'
 
 export const DUMMY_DATA = { 
 	activeList: 'Programming',
-	listOrder: ['Programming', 'Work'],
+	listOrder: ['Programming'],
 	taskLists: {
 		Programming: {
 			name: 'Programming',
