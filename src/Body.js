@@ -1,11 +1,5 @@
 import { useState, useEffect } from 'react'
-import {
-	Box,
-	Flex,
-	IconButton,
-	Icon,
-	useDisclosure
-} from '@chakra-ui/react'
+import { Box, Flex, IconButton, Icon, useDisclosure } from '@chakra-ui/react'
 import { HamburgerIcon } from '@chakra-ui/icons'
 import { BsKanban, BsTable } from 'react-icons/bs'
 import { DragDropContext } from 'react-beautiful-dnd'
@@ -25,9 +19,7 @@ const Body = ({
 	const { isOpen, onOpen, onClose } = useDisclosure()
 	const [view, setView] = useState('board')
 
-	const [columnTitlesToIds, setColumnTitlesToIds] = useState(
-		createTwoWayMap(taskListData, taskListData.activeList)
-	)
+	const [columnTitlesToIds, setColumnTitlesToIds] = useState(new Map())
 
 	useEffect(() => {
 		setData(taskListData)
@@ -37,7 +29,7 @@ const Body = ({
 	}, [taskListData])
 
 	function createTwoWayMap(taskListData, activeList) {
-		if (taskListData.taskLists[activeList].columns)
+		if (taskListData.taskLists[activeList] && taskListData.taskLists[activeList].columns)
 			return new Map(
 				Object.values(taskListData.taskLists[activeList].columns)
 					.map(column => [column.title, column.id])
@@ -155,8 +147,6 @@ const Body = ({
 			payload: { userId, columnId, title, color, owner }
 		})
 	}
-
-
 
 	return (
 		<Box bg="#F4F4F4" minWidth="fit-content" width="100%">

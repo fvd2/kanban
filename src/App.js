@@ -133,53 +133,55 @@ const App = () => {
 	) : !userContext.isLoggedIn ? (
 		<SignIn onSignIn={userContext.handleSignIn} />
 	) : (
-		<Flex direction="column" height="100vh">
-			{alertIsOpen && prePopulateAlert}
-			<Flex direction={{ base: 'column', md: 'row' }}>
-				{(!isSmallerThan768 || menuIsToggled) && (
-					<SideBar
-						onSignOut={userContext.handleSignOut}
-						taskLists={appData.listOrder}
-						activeList={appData.activeList}
-						onListSwitch={handleListSwitch}
-						dispatch={dispatch}
-						menuIsToggled={menuIsToggled}
-						toggleMenu={toggleMenu}
-					/>
-				)}
-				{appData.activeList && !menuIsToggled ? (
-					<Body
-						taskListData={appData}
-						activeList={appData.activeList}
-						userId={userContext.userId}
-						dispatch={dispatch}
-						toggleMenu={toggleMenu}
-						menuIsToggled={menuIsToggled}
-						isSmallerThan768={isSmallerThan768}
-					/>
-				) : (
-					<Flex bg="#F4F4F4" minWidth="fit-content" width="100%">
-						{isSmallerThan768 && (
-							<IconButton
-								mt={3}
-								ml={3}
-								onClick={toggleMenu}
-								isRound={true}
-								size="xs"
-								bgColor="#424874"
-								color="white"
-								_hover={{ bgColor: '#292D48' }}
-								icon={<HamburgerIcon />}
-								mr={5}
-							/>
-						)}
-						<Text mt={3} ml={3}>
-							Please add a new task list to get started
-						</Text>
-					</Flex>
-				)}
+		appData && (
+			<Flex direction="column" height="100vh">
+				{alertIsOpen && prePopulateAlert}
+				<Flex direction={{ base: 'column', md: 'row' }}>
+					{(!isSmallerThan768 || menuIsToggled) && (
+						<SideBar
+							onSignOut={userContext.handleSignOut}
+							taskLists={appData.listOrder}
+							activeList={appData.activeList}
+							onListSwitch={handleListSwitch}
+							dispatch={dispatch}
+							menuIsToggled={menuIsToggled}
+							toggleMenu={toggleMenu}
+						/>
+					)}
+					{appData.activeList && !menuIsToggled ? (
+						<Body
+							taskListData={appData}
+							activeList={appData.activeList}
+							userId={userContext.userId}
+							dispatch={dispatch}
+							toggleMenu={toggleMenu}
+							menuIsToggled={menuIsToggled}
+							isSmallerThan768={isSmallerThan768}
+						/>
+					) : (
+						<Flex bg="#F4F4F4" minWidth="fit-content" width="100%">
+							{isSmallerThan768 && (
+								<IconButton
+									mt={3}
+									ml={3}
+									onClick={toggleMenu}
+									isRound={true}
+									size="xs"
+									bgColor="#424874"
+									color="white"
+									_hover={{ bgColor: '#292D48' }}
+									icon={<HamburgerIcon />}
+									mr={5}
+								/>
+							)}
+							<Text mt={3} ml={3}>
+								Please add a new task list to get started
+							</Text>
+						</Flex>
+					)}
+				</Flex>
 			</Flex>
-		</Flex>
+		)
 	)
 }
 
