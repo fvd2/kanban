@@ -37,6 +37,7 @@ const ListAddNew = ({ hideInput, onSubmit }) => {
 					onChange={handleChange}
 					onBlur={handleBlur}
 					colorScheme="whiteAlpha"
+					color="white"
 					size="sm"
 					ml={5}
 					mr={5}

@@ -72,7 +72,7 @@ const SignIn = ({ onSignIn }) => {
 			}}>
 			{({ values, errors, touched, isSubmitting }) => (
 				<Form>
-					<Box rounded={'lg'} bg="white" boxShadow={'lg'} p={8}>
+					<Box rounded={'lg'} bg={'white'} boxShadow={'lg'} p={8}>
 						<Stack spacing={4}>
 							<Field>
 								{({ field }) => (
@@ -137,7 +137,7 @@ const SignIn = ({ onSignIn }) => {
 									New here? Create an account
 								</Link>
 							</Stack>
-							<Divider/>
+							<Divider />
 							{Object.keys(providersAndIcons).map(
 								(provider, index) => (
 									<ProviderButton
@@ -156,13 +156,9 @@ const SignIn = ({ onSignIn }) => {
 	)
 
 	const signInView = (
-		<Flex minH={'100vh'} direction="column" align="center" bg="gray.50">
+		<Flex minH={'100vh'} direction="column" align="center" bg={'gray.50'}>
 			{/* Sign-in form via https://chakra-templates.dev/forms/authentication */}
-			<Flex
-				align={'center'}
-				direction="column"
-				justify={'center'}
-				>
+			<Flex align={'center'} direction="column" justify={'center'}>
 				<Stack spacing={3} mx={'auto'} maxW={'lg'} py={4} px={6}>
 					<Stack align={'center'}>
 						<Heading fontSize={'4xl'}>Sign in</Heading>
@@ -173,7 +169,11 @@ const SignIn = ({ onSignIn }) => {
 		</Flex>
 	)
 
-	return isRegistering ? <Register onCancel={toggleRegisterView}/> : signInView
+	return isRegistering ? (
+		<Register onCancel={toggleRegisterView} />
+	) : (
+		signInView
+	)
 }
 
 export default SignIn

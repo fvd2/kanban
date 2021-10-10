@@ -9,9 +9,9 @@ ReactDOM.render(
 	<React.StrictMode>
 		<ColorModeScript initialColorMode={theme.config.initialColorMode} />
 		<ChakraProvider theme={theme}>
-			<AuthContextProvider>
-				<App />
-			</AuthContextProvider>
+				<AuthContextProvider>
+					<App />
+				</AuthContextProvider>
 		</ChakraProvider>
 	</React.StrictMode>,
 	document.getElementById('root')

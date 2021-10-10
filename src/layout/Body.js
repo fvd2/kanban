@@ -3,9 +3,9 @@ import { Box, Flex, IconButton, Icon, useDisclosure } from '@chakra-ui/react'
 import { HamburgerIcon } from '@chakra-ui/icons'
 import { BsKanban, BsTable } from 'react-icons/bs'
 import { DragDropContext } from 'react-beautiful-dnd'
-import ColumnAddNew from './components/ColumnAddNew'
-import BoardView from './views/BoardView'
-import TableView from './views/TableView'
+import ColumnAddNew from '../components/ColumnAddNew'
+import BoardView from '../views/BoardView'
+import TableView from '../views/TableView'
 
 const Body = ({
 	taskListData,
@@ -29,7 +29,10 @@ const Body = ({
 	}, [taskListData])
 
 	function createTwoWayMap(taskListData, activeList) {
-		if (taskListData.taskLists[activeList] && taskListData.taskLists[activeList].columns)
+		if (
+			taskListData.taskLists[activeList] &&
+			taskListData.taskLists[activeList].columns
+		)
 			return new Map(
 				Object.values(taskListData.taskLists[activeList].columns)
 					.map(column => [column.title, column.id])
@@ -149,7 +152,7 @@ const Body = ({
 	}
 
 	return (
-		<Box bg="#F4F4F4" minWidth="fit-content" width="100%">
+		<Box bg="#F4F4F4" minWidth="fit-content" height="100vh" width="100%">
 			<DragDropContext onDragEnd={handleOnDragEnd}>
 				<ColumnAddNew
 					isOpen={isOpen}
@@ -166,30 +169,34 @@ const Body = ({
 								onClick={toggleMenu}
 								isRound={true}
 								size="xs"
-								bgColor="#424874"
+								bgColor={"#424874"}
 								color="white"
 								_hover={{ bgColor: '#292D48' }}
 								icon={<HamburgerIcon />}
 								mr={5}
 							/>
 						)}
-						<IconButton
-							isDisabled={view === 'board'}
-							isRound={true}
-							colorScheme="blackAlpha"
-							onClick={toggleView}
-							size="xs"
-							mr={1}
-							icon={<Icon as={BsKanban} />}
-						/>
-						<IconButton
-							isDisabled={view === 'table'}
-							isRound={true}
-							colorScheme="blackAlpha"
-							size="xs"
-							onClick={toggleView}
-							icon={<Icon as={BsTable} />}
-						/>
+						{taskListData.taskLists[activeList].columnOrder.length > 0 && (
+							<>
+								<IconButton
+									isDisabled={view === 'board'}
+									isRound={true}
+									colorScheme="blackAlpha"
+									onClick={toggleView}
+									size="xs"
+									mr={1}
+									icon={<Icon as={BsKanban} />}
+								/>
+								<IconButton
+									isDisabled={view === 'table'}
+									isRound={true}
+									colorScheme="blackAlpha"
+									size="xs"
+									onClick={toggleView}
+									icon={<Icon as={BsTable} />}
+								/>
+							</>
+						)}
 					</Flex>
 					<Flex>
 						{view === 'board' ? (
