@@ -59,8 +59,8 @@ const App = () => {
 		)
 			setTimeout(() => {
 				setInfoIsOpen(true)
+				sessionStorage.setItem('kanban-dialog-seen', 'true')
 			}, 3000)
-		sessionStorage.setItem('kanban-dialog-seen', 'true')
 
 		return () => {
 			setTimeout(() => {}, 0)
