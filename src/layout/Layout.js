@@ -1,7 +1,6 @@
 import { useContext, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { Flex, useDisclosure, useMediaQuery } from '@chakra-ui/react'
-
 import { AuthContext } from '../context/auth-context'
 import AlertComponent from '../ui/Alert'
 import Body from './Body'

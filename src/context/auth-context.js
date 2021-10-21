@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from 'react'
 import {
 	browserLocalPersistence,
+	getAuth,
 	GoogleAuthProvider,
 	GithubAuthProvider,
 	onAuthStateChanged,
@@ -9,9 +10,9 @@ import {
 	signOut,
 	setPersistence
 } from 'firebase/auth'
-import { auth } from '../services/firebase'
 
 const AuthContextProvider = ({ children }) => {
+	const auth = getAuth()
 	const [user, setUser] = useState({
 		isLoggedIn: false,
 		displayName: 'Guest',
@@ -20,7 +21,7 @@ const AuthContextProvider = ({ children }) => {
 	})
 
 	useEffect(() => {
-		onAuthStateChanged(auth, user => {
+		const unsubscribe = onAuthStateChanged(auth, user => {
 			if (user) {
 				setUser({
 					isLoggedIn: true,
@@ -30,7 +31,10 @@ const AuthContextProvider = ({ children }) => {
 				})
 			}
 		})
-	}, [])
+		return () => {
+			unsubscribe()
+		}
+	}, [auth])
 
 	const handleSignIn = async provider => {
 		try {

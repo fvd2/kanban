@@ -44,36 +44,20 @@ const App = () => {
 				loadData()
 			}
 		}
-		setTimeout(() => {
-			isFirstRender.current = false
-			setIsLoading(false)
-		}, 500)
+		isFirstRender.current = false
+		setIsLoading(false)
 	}, [userContext.isLoggedIn, userContext.userId])
 
-	// prompt user to optionally pre-populate the app with dummy data
+	// TODO: prompt user to optionally pre-populate the app with dummy data
 	// and only once by storing the response in session storage
-	useEffect(() => {
-		if (
-			userContext.isLoggedIn &&
-			!sessionStorage.getItem('kanban-dialog-seen')
-		)
-			setTimeout(() => {
-				setInfoIsOpen(true)
-				sessionStorage.setItem('kanban-dialog-seen', 'true')
-			}, 3000)
 
-		return () => {
-			setTimeout(() => {}, 0)
-		}
-	}, [userContext.isLoggedIn])
-
-	const populateWithDummyData = () => {
-		dispatch({
-			type: 'prePopulateApp',
-			payload: { userId: userContext.userId }
-		})
-		setInfoIsOpen(false)
-	}
+	// const populateWithDummyData = () => {
+	// 	dispatch({
+	// 		type: 'prePopulateApp',
+	// 		payload: { userId: userContext.userId }
+	// 	})
+	// 	setInfoIsOpen(false)
+	// }
 
 	// order: (1) check if loading, (2) check if logged in, (3) render board data
 	return isLoading ? (

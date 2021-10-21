@@ -1,5 +1,4 @@
-import { auth } from '../../services/firebase'
-import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 import { Formik, Form, Field } from 'formik'
 import {
 	Box,
@@ -14,6 +13,7 @@ import {
 } from '@chakra-ui/react'
 
 const Register = ({onCancel}) => {
+	const auth = getAuth()
 	const registrationForm = (
 		<Formik
 			initialValues={{

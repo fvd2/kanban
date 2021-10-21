@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { signInWithEmailAndPassword } from 'firebase/auth'
-import { auth } from '../../services/firebase'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import { Formik, Form, Field } from 'formik'
 import { FcGoogle } from 'react-icons/fc'
 import { AiFillGithub } from 'react-icons/ai'
@@ -22,6 +21,7 @@ import {
 } from '@chakra-ui/react'
 
 const SignIn = ({ onSignIn }) => {
+	const auth = getAuth()
 	const [isRegistering, setIsRegistering] = useState(false)
 	const providersAndIcons = {
 		Google: <FcGoogle />,

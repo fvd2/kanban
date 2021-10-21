@@ -3,7 +3,7 @@ import { getFirestore } from 'firebase/firestore'
 import { getAuth } from 'firebase/auth'
 import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check'
 
-export const app = initializeApp({
+const app = initializeApp({
 	apiKey: 'AIzaSyDwkoDdGaD7u9en9tnXKizNQYlTdEHLaBE',
 	authDomain: 'kanban-218d1.firebaseapp.com',
 	databaseURL: 'https://kanban-218d1-default-rtdb.europe-west1.firebasedatabase.app',
@@ -14,9 +14,8 @@ export const app = initializeApp({
 	measurementId: 'G-XZSFXHBR8L'
 })
 
-initializeAppCheck(app, {
+const appCheck = initializeAppCheck(app, {
 	provider: new ReCaptchaV3Provider('6LcwJYMcAAAAANzbxb5adE_e3_CAJDCLG_SRbSQj'),  
 	isTokenAutoRefreshEnabled: true})
 
-export const db = getFirestore(app)
-export const auth = getAuth(app)
+export const db = getFirestore()
