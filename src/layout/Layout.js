@@ -23,8 +23,14 @@ const Layout = ({
 	} = useDisclosure({ defaultIsOpen: true })
 	const [menuIsToggled, setMenuIsToggled] = useState(false)
 	const [isSmallerThan768] = useMediaQuery('(max-width: 767px)')
+	const [view, setView] = useState('board')
+
+	const toggleView = () => {
+		setView(prevState => (prevState === 'board' ? 'table' : 'board'))
+	}
 
 	const handleListSwitch = event => {
+		setView('board')
 		dispatch({
 			type: 'selectList',
 			payload: {
@@ -77,6 +83,8 @@ const Layout = ({
 						toggleMenu={toggleMenu}
 						menuIsToggled={menuIsToggled}
 						isSmallerThan768={isSmallerThan768}
+						view={view}
+						toggleView={toggleView}
 					/>
 				) : (
 					<NoTaskLists

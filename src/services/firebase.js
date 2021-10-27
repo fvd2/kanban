@@ -1,6 +1,5 @@
 import { initializeApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore'
-import { getAuth } from 'firebase/auth'
 import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check'
 
 const app = initializeApp({
@@ -14,7 +13,7 @@ const app = initializeApp({
 	measurementId: 'G-XZSFXHBR8L'
 })
 
-const appCheck = initializeAppCheck(app, {
+initializeAppCheck(app, {
 	provider: new ReCaptchaV3Provider('6LcwJYMcAAAAANzbxb5adE_e3_CAJDCLG_SRbSQj'),  
 	isTokenAutoRefreshEnabled: true})
 

@@ -13,11 +13,12 @@ const Body = ({
 	activeList,
 	dispatch,
 	toggleMenu,
-	isSmallerThan768
+	isSmallerThan768,
+	view, 
+	toggleView
 }) => {
 	const [data, setData] = useState(taskListData)
 	const { isOpen, onOpen, onClose } = useDisclosure()
-	const [view, setView] = useState('board')
 
 	const [columnTitlesToIds, setColumnTitlesToIds] = useState(new Map())
 
@@ -46,7 +47,7 @@ const Body = ({
 	}
 
 	const handleOnDragEnd = result => {
-		if (result.type === 'column') {
+		if (result.type === 'column' && result.destination) {
 			dispatch({
 				type: 'moveColumn',
 				payload: {
@@ -104,10 +105,6 @@ const Body = ({
 			type: 'deleteColumn',
 			payload: { userId, columnId, index }
 		})
-	}
-
-	const toggleView = () => {
-		setView(prevState => (prevState === 'board' ? 'table' : 'board'))
 	}
 
 	const handleColorChange = (taskId, color) => {
