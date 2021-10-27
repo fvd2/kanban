@@ -51,13 +51,13 @@ const App = () => {
 	// TODO: prompt user to optionally pre-populate the app with dummy data
 	// and only once by storing the response in session storage
 
-	// const populateWithDummyData = () => {
-	// 	dispatch({
-	// 		type: 'prePopulateApp',
-	// 		payload: { userId: userContext.userId }
-	// 	})
-	// 	setInfoIsOpen(false)
-	// }
+	const populateWithDummyData = () => {
+		dispatch({
+			type: 'prePopulateApp',
+			payload: { userId: userContext.userId }
+		})
+		setInfoIsOpen(false)
+	}
 
 	// order: (1) check if loading, (2) check if logged in, (3) render board data
 	return isLoading ? (
