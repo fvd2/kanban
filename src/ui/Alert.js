@@ -1,21 +1,31 @@
 import {
-    AlertDescription,
+	Alert,
+	AlertDescription,
 	AlertIcon,
 	AlertTitle,
 	Button,
 	CloseButton
 } from '@chakra-ui/react'
 
-const Alert = ({status, title, description, submitHandler, closeHandler}) => {
+const AlertComponent = ({
+	status,
+	title,
+	description,
+	handleSubmit,
+	handleClose
+}) => {
 	return (
-		<Alert status={status} px={5} py={5}>
+		<Alert
+			display="flex"
+			justify="space-between"
+			status={status}
+			px={5}
+			py={5}>
 			<AlertIcon />
 			<AlertTitle>{title}</AlertTitle>
-			<AlertDescription mr={3}>
-				{description}
-			</AlertDescription>
+			<AlertDescription mr={3}>{description}</AlertDescription>
 			<Button
-				onClick={submitHandler}
+				onClick={handleSubmit}
 				mr={3}
 				variant="solid"
 				size="sm"
@@ -23,9 +33,9 @@ const Alert = ({status, title, description, submitHandler, closeHandler}) => {
 				colorScheme="blue">
 				Yes, please!
 			</Button>
-			<CloseButton onClick={closeHandler}></CloseButton>
+			<CloseButton onClick={handleClose} />
 		</Alert>
 	)
 }
 
-export default Alert
+export default AlertComponent

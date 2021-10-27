@@ -18,6 +18,10 @@ const App = () => {
 		activeList: ''
 	})
 
+	const toggleInfoBar = () => {
+		setInfoIsOpen(prevState => !prevState)
+	}
+
 	// on first render, load existing user data (if available)
 	useEffect(() => {
 		if (isFirstRender) {
@@ -48,15 +52,22 @@ const App = () => {
 		setIsLoading(false)
 	}, [userContext.isLoggedIn, userContext.userId])
 
-	// TODO: prompt user to optionally pre-populate the app with dummy data
+	// prompt user to optionally pre-populate the app with dummy data
 	// and only once by storing the response in session storage
+
+	useEffect(() => {
+		if (!sessionStorage.getItem('kanban-alert-seen')) {
+			setTimeout(() => toggleInfoBar(), 3000)
+			sessionStorage.setItem('kanban-alert-seen', 'true')
+		}
+	}, [])
 
 	const populateWithDummyData = () => {
 		dispatch({
 			type: 'prePopulateApp',
 			payload: { userId: userContext.userId }
 		})
-		setInfoIsOpen(false)
+		toggleInfoBar()
 	}
 
 	// order: (1) check if loading, (2) check if logged in, (3) render board data
@@ -70,7 +81,7 @@ const App = () => {
 				appData={appData}
 				dispatch={dispatch}
 				infoIsOpen={infoIsOpen}
-				setInfoIsOpen={setInfoIsOpen}
+				toggleInfoBar={toggleInfoBar}
 				populateWithDummyData={populateWithDummyData}
 			/>
 		)

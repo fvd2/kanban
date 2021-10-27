@@ -12,7 +12,7 @@ const Layout = ({
 	appData,
 	dispatch,
 	infoIsOpen,
-	setInfoIsOpen,
+	toggleInfoBar,
 	populateWithDummyData
 }) => {
 	const userContext = useContext(AuthContext)
@@ -58,8 +58,8 @@ const Layout = ({
 					status="info"
 					title="Care for some dummy data?"
 					description="To quickly see what this app can do for you"
-					submitHandler={populateWithDummyData}
-					closeHandler={() => setInfoIsOpen(false)}
+					handleSubmit={populateWithDummyData}
+					handleClose={toggleInfoBar}
 				/>
 			)}
 			<Flex direction={{ base: 'column', md: 'row' }}>
